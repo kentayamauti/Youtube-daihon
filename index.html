@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube AI分析アプリ (全自動版)</title>
+    <!-- Tailwind CSS (デザイン用) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; }
+        /* プログレスバーのアニメーション */
+        #progress-bar { transition: width 0.3s ease-in-out; }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white rounded-lg shadow-xl p-6 md:p-8 w-full max-w-2xl">
+        
+        <h1 class="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-6">
+            YouTube AI分析アプリ (全自動版)
+        </h1>
+        
+        <p class="text-center text-gray-600 mb-6">
+            YouTube動画のURLと2種類のAPIキーを入力すると、文字起こしとAIによる台本分析を自動で行います。
+        </p>
+        <p class="text-center text-sm text-gray-500 mb-6 bg-blue-50 border border-blue-200 p-3 rounded-lg">
+            ※ APIキーは分析処理のためにサーバーに送信されますが、サーバーには一切保存されません。
+        </p>
+
+        <!-- 入力フォーム -->
+        <div class="space-y-6">
+            <!-- 1. YouTube URL -->
+            <div>
+                <label for="youtube-url" class="block text-sm font-medium text-gray-700 mb-2">
+                    1. YouTube 動画URL
+                </label>
+                <input type="url" id="youtube-url" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500" placeholder="https://www.youtube.com/watch?v=...">
+            </div>
+
+            <!-- 2. YouTube APIキー -->
+            <div>
+                <label for="youtube-api-key" class="block text-sm font-medium text-gray-700 mb-2">
+                    2. YouTube Data APIキー (文字起こし取得用)
+                </label>
+                <input type="password" id="youtube-api-key" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500" placeholder="ご自身のYouTube Data APIキー">
+            </div>
+
+            <!-- 3. Gemini APIキー -->
+            <div>
+                <label for="gemini-api-key" class="block text-sm font-medium text-gray-700 mb-2">
+                    3. Gemini APIキー (AI分析用)
+                </label>
+                <input type="password" id="gemini-api-key" class="w-full p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-indigo-500" placeholder="ご自身のGemini APIキー">
+            </div>
+
+            <!-- 4. 実行ボタン -->
+            <button id="analyze-button" class="w-full bg-indigo-600 text-white font-bold py-3 px-4 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors duration-200">
+                分析を開始
+            </button>
+        </div>
+        
+        <!-- プログレスバー表示エリア -->
+        <div id="progress-container" class="hidden my-8">
+            <div class="flex justify-between mb-1">
+                <span id="progress-text" class="text-base font-medium text-indigo-700">分析中... 0%</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-4">
+                <div id="progress-bar" class="bg-indigo-600 h-4 rounded-full" style="width: 0%"></div>
+            </div>
+        </div>
+        
+        <!-- エラーメッセージ表示欄 -->
+        <div id="error-message" class="hidden mt-4 p-3 bg-red-100 border border-red-300 text-red-800 rounded-lg">
+            <!-- エラー内容がここに表示されます -->
+        </div>
+
+        <!-- 結果表示エリア -->
+        <div id="result-container" class="hidden mt-8 pt-6 border-t border-gray-200">
+            <!-- 文字起こし保存ボタン -->
+            <div class="mb-4">
+                <h2 class="text-xl font-semibold text-gray-800 mb-2">文字起こしデータ</h2>
+                <button id="save-transcript-button" class="w-full bg-green-600 text-white font-bold py-3 px-4 rounded-lg shadow-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 transition-colors duration-200">
+                    文字起こしをダウンロード (.txt)
+                </button>
+                <!-- 文字起こしデータ本体（非表示） -->
+                <textarea id="transcript-data" class="hidden"></textarea>
+            </div>
+            
+            <!-- AI分析結果 -->
+            <h2 class="text-xl font-semibold text-gray-800 mb-2">AI分析結果</h2>
+            <div id="result-output" class="p-4 bg-gray-50 border border-gray-200 rounded-lg space-y-4">
+                <!-- 分析結果がここに挿入されます -->
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript (アプリの動作ロジック) -->
+    <script>
+        // HTML要素を取得
+        const analyzeButton = document.getElementById('analyze-button');
+        const saveButton = document.getElementById('save-transcript-button');
+        const urlInput = document.getElementById('youtube-url');
+        const youtubeApiInput = document.getElementById('youtube-api-key');
+        const geminiApiInput = document.getElementById('gemini-api-key');
+        const progressContainer = document.getElementById('progress-container');
+        const progressBar = document.getElementById('progress-bar');
+        const progressText = document.getElementById('progress-text');
+        const resultContainer = document.getElementById('result-container');
+        const resultOutput = document.getElementById('result-output');
+        const errorMessage = document.getElementById('error-message');
+        const transcriptData = document.getElementById('transcript-data');
+
+        // デプロイ（公開）設定:
+        // バックエンドサーバーのアドレスを '/' に設定します。
+        // これにより、この index.html が配信されているサーバー（Vercel）と
+        // 同じ場所にある '/analyze' エンドポイントに通信します。
+        const BACKEND_URL = '/'; 
+
+        // プログレスバー制御用の変数
+        let progressInterval = null;
+        let currentProgress = 0;
+
+        // 「分析開始」ボタンが押された時の処理
+        analyzeButton.addEventListener('click', async () => {
+            const youtubeUrl = urlInput.value;
+            const youtubeApiKey = youtubeApiInput.value;
+            const geminiApiKey = geminiApiInput.value;
+
+            // 入力チェック
+            if (!youtubeUrl || !youtubeApiKey || !geminiApiKey) {
+                showError("すべての項目を入力してください。");
+                return;
+            }
+
+            // UIをリセット
+            hideError();
+            resultContainer.classList.add('hidden');
+            resultOutput.innerHTML = '';
+            transcriptData.value = '';
+            analyzeButton.disabled = true; // ボタンを無効化
+
+            // プログレスバーのシミュレーションを開始
+            currentProgress = 0;
+            progressBar.style.width = '0%';
+            progressText.textContent = '分析中... 0%';
+            progressContainer.classList.remove('hidden');
+
+            if (progressInterval) clearInterval(progressInterval); // 古いタイマーをクリア
+
+            // 99%まで自動で進むタイマー (200msごと)
+            progressInterval = setInterval(() => {
+                if (currentProgress < 90) {
+                    currentProgress += 2; // 90%までは 2% ずつ
+                } else if (currentProgress < 99) {
+                    currentProgress += 0.2; // 90%以降はゆっくり
+                }
+                let displayProgress = Math.min(Math.floor(currentProgress), 99);
+                progressBar.style.width = displayProgress + '%';
+                progressText.textContent = `分析中... ${displayProgress}%`;
+            }, 200);
+
+            try {
+                // バックエンドサーバーにリクエストを送信
+                const analyzeUrl = (BACKEND_URL.endsWith('/') ? BACKEND_URL.slice(0, -1) : BACKEND_URL) + '/analyze';
+
+                const response = await fetch(analyzeUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        youtube_url: youtubeUrl,
+                        youtube_api_key: youtubeApiKey,
+                        gemini_api_key: geminiApiKey
+                    })
+                });
+
+                // サーバーからエラーが返ってきた場合
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(errorData.error || `サーバーエラー: ${response.status}`);
+                }
+                
+                // サーバーから正常な結果が返ってきた場合
+                const result = await response.json();
+                
+                clearInterval(progressInterval); // タイマー停止
+                progressInterval = null;
+                
+                // 100% (完了) にする
+                progressBar.style.width = '100%';
+                progressText.textContent = '分析完了 (100%)';
+                
+                // 0.5秒後にプログレスバーを隠し、結果を表示
+                setTimeout(() => {
+                    progressContainer.classList.add('hidden');
+                    transcriptData.value = result.transcript; // 文字起こしデータを保存
+                    resultOutput.innerHTML = result.analysis_html; // AI分析結果を表示
+                    resultContainer.classList.remove('hidden');
+                }, 500);
+
+            } catch (error) {
+                // エラーが発生した場合
+                if (progressInterval) clearInterval(progressInterval); // タイマー停止
+                progressInterval = null;
+                
+                progressContainer.classList.add('hidden'); // プログレスバーを隠す
+                
+                console.error(error);
+                if (error instanceof TypeError && error.message.includes('Failed to fetch')) {
+                    showError(`サーバーへの接続に失敗しました。デプロイが正常に完了しているか確認してください。`);
+                } else {
+                    showError(`処理に失敗しました: ${error.message}`);
+                }
+            } finally {
+                // 成功・失敗どちらでも、ボタンを再度押せるようにする
+                analyzeButton.disabled = false;
+            }
+        });
+        
+        // 「文字起こしをダウンロード」ボタンが押された時の処理
+        saveButton.addEventListener('click', () => {
+            const transcriptText = transcriptData.value;
+            if (!transcriptText) return;
+            // テキストデータをBlobオブジェクトに変換
+            const blob = new Blob([transcriptText], { type: 'text/plain;charset=utf-8' });
+            // ダウンロード用のリンクを作成
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'transcript.txt'; // ダウンロードファイル名
+            document.body.appendChild(link);
+            link.click(); // リンクを自動クリック
+            document.body.removeChild(link); // リンクを削除
+        });
+
+        // エラーメッセージ表示用の関数
+        function showError(message) {
+            errorMessage.textContent = message;
+            errorMessage.classList.remove('hidden');
+        }
+
+        // エラーメッセージ非表示用の関数
+        function hideError() {
+            errorMessage.textContent = '';
+            errorMessage.classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
+
