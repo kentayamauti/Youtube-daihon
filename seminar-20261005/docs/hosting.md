@@ -36,3 +36,18 @@
 
 - [Cloudflare Pages の制限（公式）](https://developers.cloudflare.com/pages/platform/limits/)
 - [Cloudflare Pages 料金 2026](https://vpsranking.com/serverless/cloudflare-pages/)
+
+## 独自ドメインの候補（名前は要相談）
+
+費用の目安：`.com` は Cloudflare Registrar なら原価販売で年1,600円前後（更新時も値上げなし）。`.jp` は Cloudflare では取れないため、別の登録サービスで年3,000〜4,000円前後。
+
+| 候補 | 印象 | 年額目安 |
+|---|---|---|
+| `ykkn.jp` | 短く日本向けで信頼感がある | 3,000〜4,000円 |
+| `ykkn.com` | 短く覚えやすい（空いていれば第一候補） | 約1,600円 |
+| `ykkn-youtube.com` | 何をしているか伝わる | 約1,600円 |
+| `ykkn-sns.com` | YouTube以外に広げても使える | 約1,600円 |
+
+サブページで分ける案：ドメインは1つだけ取り、`（ドメイン）/seminar` のようにセミナー用LPを置くと、次回以降のセミナーやHPにも同じドメインを使い回せる。
+
+※ 空き状況はドメイン登録サービスの検索画面で確認してください（この作業環境からは確認できませんでした）。

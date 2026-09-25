@@ -105,7 +105,6 @@ body{padding-bottom:88px}
     <p class="muted">「ゼロから始めるYouTubeチャンネル運用セミナー」を受講いただき、ありがとうございました。成功ライン・空いている場所・続けられるペースは、一人ひとり違います。受講者の方限定で、あなたのチャンネルに合わせた個別相談をご用意しました。</p>
     <div class="btns">
       <a class="btn btn-primary js-form" href="#contact">個別相談を申し込む</a>
-      <a class="btn btn-secondary js-line-only" href="#line">LINEで最新情報を受け取る</a>
     </div>
   </div>
 </section>
@@ -151,8 +150,8 @@ body{padding-bottom:88px}
     <div class="grid g2">
       <div class="card feature">
         <span class="badge">受講者限定の特別価格</span>
-        <h3>個別相談（オンライン）</h3>
-        <div class="price"><s>通常 30,000円</s><strong>15,000円</strong><span class="muted small">（税込）</span></div>
+        <h3>個別相談（30分）</h3>
+        <div class="price"><s>通常 30,000円</s><strong>15,000円</strong><span class="muted small">（税込・30分）</span></div>
         <p class="muted small">業種・目的をお聞きして、チャンネルの方向性づくりと、続けられるペースの設計を一緒に整理します。</p>
         <a class="btn btn-primary js-form" href="#contact">個別相談を申し込む</a>
       </div>
@@ -178,7 +177,7 @@ body{padding-bottom:88px}
     <ol class="steps">
       <li><h3>フォームから申し込む</h3><p class="muted small" style="margin:0">お名前・連絡先・チャンネルURL（これからの方は予定ジャンル）と、今いちばん困っていることをご記入ください。1〜2分で終わります。</p></li>
       <li><h3>日程を調整する</h3><p class="muted small" style="margin:0">2営業日以内にメールでご連絡します。候補日からお選びください。</p></li>
-      <li><h3>オンラインで相談</h3><p class="muted small" style="margin:0">事前にチャンネルとジャンルの競合を確認したうえで、道筋と改善案をその場でお伝えします。</p></li>
+      <li><h3>30分の個別相談</h3><p class="muted small" style="margin:0">事前にチャンネルとジャンルの競合を確認しておくので、当日の30分は道筋と改善案のお話に集中できます。</p></li>
       <li><h3>次の一手を決める</h3><p class="muted small" style="margin:0">ご自身で進めるか、継続サポートを使うかは、ここで判断いただければ大丈夫です。</p></li>
     </ol>
   </div>
@@ -189,6 +188,7 @@ body{padding-bottom:88px}
   <div class="wrap">
     <p class="eyebrow">FAQ</p>
     <h2>よくあるご質問</h2>
+    <details><summary>料金はいくらですか。初回無料ですか。</summary><p>個別相談は30分・通常30,000円（税込）です。セミナー受講者の方は特別価格15,000円（税込）でお受けします。無料相談は行っておりません。</p></details>
     <details><summary>特別価格はいつまで適用されますか。</summary><p>セミナー受講者の方限定の価格です。お申し込み期限はフォームに記載しています。</p></details>
     <details><summary>まだチャンネルを持っていなくても相談できますか。</summary><p>できます。これから始める方は、予定しているジャンルの相場と空いている場所を一緒に確認するところから始めます。</p></details>
     <details><summary>顔出しをしていなくても大丈夫ですか。</summary><p>大丈夫です。顔を出さずに収益化した経験をもとに、顔出しなしでの設計もご提案できます。</p></details>
@@ -197,15 +197,6 @@ body{padding-bottom:88px}
   </div>
 </section>
 
-<!-- LINE（LINE_URL を設定すると表示されます） -->
-<section class="sec" id="line" hidden>
-  <div class="wrap">
-    <p class="eyebrow">STAY UPDATED</p>
-    <h2>まずは情報だけ受け取る</h2>
-    <p class="muted">相談はまだ早い、という方へ。次回セミナーの先行案内と、受講者向けの実践メモをLINEでお送りしています。いつでも解除できます。</p>
-    <a class="btn btn-secondary js-line" href="#" target="_blank" rel="noopener">LINEで受け取る</a>
-  </div>
-</section>
 
 <!-- CTA -->
 <section class="navy sec" id="contact">
@@ -229,25 +220,17 @@ body{padding-bottom:88px}
 </footer>
 
 <div class="sticky">
-  <a class="btn btn-secondary js-line-only" href="#line">LINE登録</a>
   <a class="btn btn-primary js-form" href="#contact">個別相談を申し込む</a>
 </div>
 
 <script>
 /* ===== 設定：ここだけ書き換えればOK ===== */
 const FORM_URL = "";  // GoogleフォームのURL（例: https://forms.gle/xxxxx）
-const LINE_URL = "";  // LINE公式アカウントの友だち追加URL（未設定ならLINE関連は非表示）
 /* ======================================== */
 if (FORM_URL) {
   document.querySelectorAll(".js-form").forEach(a => {
     a.href = FORM_URL; a.target = "_blank"; a.rel = "noopener";
   });
-}
-if (LINE_URL) {
-  document.getElementById("line").hidden = false;
-  document.querySelectorAll(".js-line").forEach(a => { a.href = LINE_URL; });
-} else {
-  document.querySelectorAll(".js-line-only").forEach(a => { a.hidden = true; });
 }
 </script>
 </body>
