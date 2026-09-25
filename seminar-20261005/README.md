@@ -21,7 +21,7 @@
 2. ⬜ 仮打ち合わせ（来週）で【要確認】を確定 → 台本v11・スライドv8
 3. ⬜ ワーク用サムネ画像（第1〜3問 A/B）を差し込み
 4. ⬜ Googleフォーム作成（`form/create_form.gs` を実行）→ URLをLPに設定
-5. ⬜ ykkn-youtube.com を取得し、LPを Cloudflare Pages で公開（`docs/hosting.md` の①〜③）
+5. ✅ ykkn-youtube.com を取得し、LPを Cloudflare Pages で公開（https://ykkn-youtube.com ／ `main` に入ると自動反映）
 6. ⬜ LPのQRコードをスライドS37（特典）に掲載
 7. ⬜ 本番（10/5）→ 申し込み対応
 
