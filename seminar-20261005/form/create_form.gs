@@ -17,6 +17,7 @@ const CONFIG = {
   description:
     '「ゼロから始めるYouTubeチャンネル運用セミナー」にご参加いただき、ありがとうございました。\n' +
     '受講者限定の個別相談（30分／通常30,000円 → 特別価格15,000円・税込）のお申し込みフォームです。\n' +
+    '特別価格のお申し込み期限：2026年10月10日（土）まで\n' +
     '2営業日以内に、ご入力いただいたメールアドレスへ日程調整のご連絡をいたします。',
   confirmationMessage:
     'お申し込みありがとうございました。2営業日以内にメールでご連絡いたします。',
@@ -62,6 +63,11 @@ function createConsultationForm() {
 
   form.addParagraphTextItem()
       .setTitle('今いちばん困っていること・相談したいこと')
+      .setRequired(true);
+
+  form.addMultipleChoiceItem()
+      .setTitle('ご希望の相談方法')
+      .setChoiceValues(['オンライン（Zoom）', '対面', 'どちらでもよい'])
       .setRequired(true);
 
   form.addCheckboxItem()

@@ -18,26 +18,45 @@
 - 保守：HTMLを直してGitHubに保存（push）するだけで自動反映。サーバーの更新作業は無し
 - 表示が速く、アクセスが急に増えても落ちない
 
-## 公開手順（初回のみ・約10分）
+## 公開手順：ykkn-youtube.com（初回のみ・約20分）
 
-1. https://dash.cloudflare.com で無料アカウントを作成
-2. 「Workers & Pages」→「作成」→「Pages」→「Gitに接続」→ GitHubを連携し、このリポジトリを選択
-3. ビルド設定
-   - フレームワーク：なし
-   - ビルドコマンド：空欄
+ドメインの購入（お支払い）とアカウント作成はご本人の操作が必要です。①〜③だけお願いします。④以降の中身の更新はこちらで行います。
+
+### ① Cloudflare アカウントを作る（無料）
+1. https://dash.cloudflare.com/sign-up でメールアドレスとパスワードを登録
+2. 届いた確認メールのリンクを開く
+
+### ② ドメイン ykkn-youtube.com を買う（年1,600円前後）
+1. ダッシュボード左メニュー「ドメインの登録」→「ドメインを登録」
+2. `ykkn-youtube.com` を検索 →「購入」
+3. 連絡先（氏名・住所・電話）とクレジットカードを入力して購入
+   - 連絡先は WHOIS で自動的に非公開になります
+   - 自動更新はオンのままを推奨（切れるとLPが表示されなくなります）
+
+### ③ LPをつなぐ（Cloudflare Pages）
+1. 左メニュー「Workers & Pages」→「作成」→「Pages」タブ →「Gitに接続」
+2. GitHub アカウントを連携し、リポジトリ `kentayamauti/youtube-daihon` を選ぶ
+3. 設定を次のとおり入力して「保存してデプロイ」
+   - プロジェクト名：`ykkn-youtube`
+   - 本番ブランチ：`main`
+   - フレームワーク プリセット：なし
+   - ビルドコマンド：（空欄）
    - ビルド出力ディレクトリ：`seminar-20261005/lp`
-   - 本番ブランチ：LPを置くブランチ（例：`main`）
-4. 「保存してデプロイ」→ `https://（プロジェクト名）.pages.dev` で公開される
-5. （任意）「カスタムドメイン」から独自ドメインを設定
+4. 完了すると `https://ykkn-youtube.pages.dev` で表示される
+5. プロジェクトの「カスタムドメイン」→「カスタムドメインを設定」→ `ykkn-youtube.com` を入力 →「DNSレコードをアクティブ化」
+   - 同じ手順で `www.ykkn-youtube.com` も追加しておく
+   - 数分〜最大1日で `https://ykkn-youtube.com` が表示されるようになる（SSLは自動）
 
-アカウント作成とGitHub連携はご本人の操作が必要です。そこだけお願いします。
+### ④ 以降の更新
+- LPのHTMLを直してGitHubの `main` に保存すると、1〜2分で自動的に公開サイトへ反映される
+- 費用はドメイン代（年1回）のみ
 
 ## 参考
 
 - [Cloudflare Pages の制限（公式）](https://developers.cloudflare.com/pages/platform/limits/)
 - [Cloudflare Pages 料金 2026](https://vpsranking.com/serverless/cloudflare-pages/)
 
-## 独自ドメインの候補（名前は要相談）
+## 独自ドメインの候補（→ `ykkn-youtube.com` に決定）
 
 費用の目安：`.com` は Cloudflare Registrar なら原価販売で年1,600円前後（更新時も値上げなし）。`.jp` は Cloudflare では取れないため、別の登録サービスで年3,000〜4,000円前後。
 
