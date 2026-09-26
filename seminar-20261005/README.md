@@ -22,7 +22,7 @@
 3. ⬜ ワーク用サムネ画像（第1〜3問 A/B）を差し込み
 4. ✅ Googleフォーム作成 → LPに設定（https://forms.gle/1oRgoAy4vefGpXRg7 ／ 回答はスプレッドシート＋メール通知）
 5. ✅ ykkn-youtube.com を取得し、LPを Cloudflare Pages で公開（https://ykkn-youtube.com ／ `main` に入ると自動反映）
-6. ⬜ LPのQRコードをスライドS37（特典）に掲載
+6. ✅ LPのQRコードをスライドS37（特典）に掲載（https://ykkn-youtube.com/ ／ 読み取り確認済み）
 7. ⬜ 本番（10/5）→ 申し込み対応
 
 ## 決定事項
