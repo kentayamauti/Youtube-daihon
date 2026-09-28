@@ -10,7 +10,8 @@
 | `script/セミナー台本_v9_original.pdf` | 元の台本（v9） | 保管用 |
 | `slides/YouTubeセミナー_v19.pptx` | スライド（43枚。ワーク第1問（S23・S24）完成、S30に実際の4本、S31「月10万円から逆算」、S34「好きなことで、生きていく」、S41にQRコード） | ✅ サムネ画像待ち |
 | `slides/YouTubeセミナー_v6_original.pptx` | 元のスライド（v6） | 保管用 |
-| `lp/index.html` | LP本体 | ✅ 初版完成（フォームURL待ち） |
+| `lp/index.html` | LP本体（ファーストビューにサムネ `lp/img/hero.png`） | ✅ 初版完成（フォームURL待ち） |
+| `form/form-header.png` | Googleフォームのヘッダー画像（1600×400。フォーム編集画面の「テーマ→ヘッダー」から手動で設定） | ✅ |
 | `lp/tokushoho.html` / `lp/privacy.html` | 特商法表記・プライバシーポリシー | ⚠ 事業者情報の入力待ち |
 | `form/create_form.gs` | Googleフォームを自動作成するスクリプト | ✅ 実行待ち |
 | `docs/hosting.md` | LPの公開先の比較と手順 | ✅ |
