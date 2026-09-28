@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" width="640" height="640">
+  <rect width="640" height="640" fill="#0B1F4B"/>
+  <!-- play triangle in a cyan ring (not a YouTube-style tile) -->
+  <circle cx="320" cy="245" r="112" fill="none" stroke="#00B3D6" stroke-width="22"/>
+  <path d="M292 190 L292 300 L385 245 Z" fill="#FFD400"/>
+  <text x="320" y="490" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-weight="800" font-size="112" fill="#FFFFFF" letter-spacing="4">Ykkn</text>
+</svg>
