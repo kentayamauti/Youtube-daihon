@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" width="640" height="640">
+  <rect width="640" height="640" fill="#FFD400"/>
+  <!-- kuroko (stagehand) body -->
+  <path d="M150 640 C150 500 220 430 320 430 C420 430 490 500 490 640 Z" fill="#1A1A1A"/>
+  <!-- head with hood -->
+  <circle cx="320" cy="300" r="120" fill="#1A1A1A"/>
+  <!-- veil hanging in front of face -->
+  <path d="M225 285 Q320 265 415 285 L400 430 Q320 450 240 430 Z" fill="#2B2B2B"/>
+  <!-- eyes peeking over veil -->
+  <ellipse cx="282" cy="262" rx="13" ry="16" fill="#FFFFFF"/>
+  <ellipse cx="358" cy="262" rx="13" ry="16" fill="#FFFFFF"/>
+  <circle cx="285" cy="265" r="6" fill="#1A1A1A"/>
+  <circle cx="361" cy="265" r="6" fill="#1A1A1A"/>
+  <!-- red play button on the veil -->
+  <circle cx="320" cy="355" r="40" fill="#FFD400"/>
+  <path d="M307 334 L307 376 L343 355 Z" fill="#1A1A1A"/>
+  <!-- hand holding up a thumbnail card -->
+  <g transform="rotate(-12 470 230)">
+    <rect x="400" y="160" width="150" height="96" rx="10" fill="#FFFFFF" stroke="#1A1A1A" stroke-width="8"/>
+    <rect x="414" y="176" width="70" height="18" rx="4" fill="#C40000"/>
+    <rect x="414" y="204" width="110" height="14" rx="4" fill="#1A1A1A"/>
+    <rect x="414" y="226" width="80" height="14" rx="4" fill="#1A1A1A"/>
+  </g>
+  <circle cx="455" cy="300" r="26" fill="#1A1A1A"/>
+  <path d="M440 300 L470 250" stroke="#1A1A1A" stroke-width="26" stroke-linecap="round"/>
+</svg>
