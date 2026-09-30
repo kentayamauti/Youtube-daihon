@@ -82,6 +82,10 @@ footer a{color:var(--on-navy)}
   padding:12px var(--sp4);padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));
   display:flex;gap:var(--sp2);z-index:20}
 .sticky .btn{flex:1;padding:12px 8px;font-size:14px}
+.btn-line{background:#06C755;color:#fff}
+.line-box{display:flex;flex-wrap:wrap;gap:var(--sp8);align-items:center}
+.line-box img{width:160px;height:160px;border:1px solid var(--line);border-radius:var(--r-md);display:none}
+@media(min-width:768px){.line-box img{display:block}}
 body{padding-bottom:88px}
 [hidden]{display:none!important}
 @media(min-width:768px){
@@ -107,12 +111,13 @@ body{padding-bottom:88px}
     <p class="muted">「ゼロから始めるYouTubeチャンネル運用セミナー」を受講いただき、ありがとうございました。成功ライン・空いている場所・続けられるペースは、一人ひとり違います。受講者の方限定で、あなたのチャンネルに合わせた個別相談をご用意しました。</p>
     <div class="btns">
       <a class="btn btn-primary js-form" href="#contact">個別相談を申し込む</a>
+      <a class="btn btn-line" href="https://line.me/R/ti/p/@031svhsj" target="_blank" rel="noopener">LINEで次回セミナーの招待を受け取る</a>
     </div>
   </div>
 </section>
 
 <!-- 実績 -->
-<section class="sec alt">
+<section class="sec alt" id="results">
   <div class="wrap">
     <p class="eyebrow">RESULTS</p>
     <h2>会社員をしながら、企画で伸ばしてきました。</h2>
@@ -187,7 +192,7 @@ body{padding-bottom:88px}
 </section>
 
 <!-- FAQ -->
-<section class="sec alt">
+<section class="sec alt" id="faq">
   <div class="wrap">
     <p class="eyebrow">FAQ</p>
     <h2>よくあるご質問</h2>
@@ -203,6 +208,21 @@ body{padding-bottom:88px}
 
 
 <!-- CTA -->
+<section class="sec" id="line">
+  <div class="wrap">
+    <p class="eyebrow">LINE</p>
+    <h2>次回セミナーのご招待は、LINEでお届けします。</h2>
+    <div class="line-box">
+      <img src="line_qr.png" alt="LINE友だち追加のQRコード（@031svhsj）">
+      <div>
+        <p class="muted">セミナーは月1回〜2か月に1回のペースで開催予定です。LINEに登録いただいた方に、次回のご招待を優先してお送りします。週1回、YouTubeのワンポイントもお届けします。</p>
+        <a class="btn btn-line" href="https://line.me/R/ti/p/@031svhsj" target="_blank" rel="noopener">LINEで友だち追加する</a>
+        <p class="muted small" style="margin-top:var(--sp4)">LINE ID：@031svhsj</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="navy sec" id="contact">
   <div class="wrap">
     <p class="eyebrow">CONTACT</p>
@@ -224,6 +244,7 @@ body{padding-bottom:88px}
 </footer>
 
 <div class="sticky">
+  <a class="btn btn-line" href="https://line.me/R/ti/p/@031svhsj" target="_blank" rel="noopener">LINE登録</a>
   <a class="btn btn-primary js-form" href="#contact">個別相談を申し込む</a>
 </div>
 
