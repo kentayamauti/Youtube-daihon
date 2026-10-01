@@ -1,8 +1,9 @@
 const QR = require('qrcode'); const fs = require('fs');
-const names = ['大工後藤株式会社','株式会社公文塗装店','株式会社gomme','株式会社田中でんき','信空自動車株式会社','なごみ建築工房','株式会社ウッドビルド','株式会社ケーエフ工業','株式会社富士スタヂオ','株式会社大貫堂印房','アーネストアカデミー株式会社','音瀬計装有限会社','ほまれの家','グローバルハーツ株式会社','橋本真規'];
-// 個人の方は「御社」を「〇〇様」に置き換える
-const person = {'橋本真規': '橋本様'};
-const common = ['本日お話ししたような戦略を一つずつ積み重ねていけば、御社のお役に立てることがあるかもしれません。','もしご興味があれば、個別相談で御社に合った進め方を一緒に考えさせてください。'];
+// NAMES=宛名1,宛名2 を指定すると、その宛名だけで作る（予備の手紙用）
+const names = process.env.NAMES ? process.env.NAMES.split(',') : ['大工後藤株式会社','株式会社公文塗装店','株式会社gomme','株式会社田中でんき','信空自動車株式会社','なごみ建築工房','株式会社ウッドビルド','株式会社ケーエフ工業','株式会社富士スタヂオ','株式会社大貫堂印房','アーネストアカデミー株式会社','音瀬計装有限会社','ほまれの家','グローバルハーツ株式会社','橋本真規'];
+// 会社以外の宛先は「御社」を置き換える（個人の方・事業所）
+const person = {'橋本真規': '橋本様', 'ほまれの家': '貴事業所'};
+const common = ['本日お話ししたような戦略を一つずつ積み重ねていけば、御社のお役に立てることがあるかもしれません。','セミナーの中で何か感じていただけたことや、「うちの場合はどうだろう？」と思われたことがあれば、どんな小さなことでもお気軽にご相談ください。個別相談で、御社に合った進め方を一緒に考えさせてください。'];
 const special = {'株式会社公文塗装店': ['塗装のジャンルを、ひととおり見てみました。','率直に申し上げると、塗装は YouTube とは少し相性が良くないのかもしれない、と感じました。<br>一方で、他の SNS であれば、集客につながる見込みはありそうだと感じています。','ただ、どのくらいのお問い合わせにつながるかは、まだはっきりとは分かりません。もし個別相談の際に、御社がどのようなことを求めているかをお聞かせいただければ、対応できることがあるかもしれません。'],
 '株式会社富士スタヂオ': ['御社のホームページを拝見し、あわせて写真撮影のジャンルを俯瞰して見てみました。','率直に申し上げると、写真撮影は YouTube とはあまり相性が良くないのかもしれない、と感じました。YouTube はご年配の方によく見られている媒体だからです。<br>一方で、他の SNS であれば発信の内容を転用しやすく、お客様への広がりも期待できると感じています。','もしご興味があれば、個別相談でもう少し詳しくお話しさせてください。'],
 '株式会社大貫堂印房': ['御社の Instagram を拝見し、あわせて「はんこ」のジャンルを俯瞰して見てみました。','私が需要があると感じたのは、外国の方に向けた商品と、お城の印です。<br>こうした内容を発信していけば、ひょっとすると新しいお客様が増えるきっかけになるかもしれない、と感じました。','もしご興味があれば、個別相談でもう少し詳しくお話しさせてください。']};
@@ -27,5 +28,5 @@ p{margin:0 0 4.5mm;text-align:justify}.sign{text-align:right;margin-top:8mm;font
 .box{position:absolute;left:16mm;right:16mm;bottom:14mm;border:1px solid #bbb;border-radius:2mm;padding:4mm 5mm;display:flex;gap:5mm;align-items:center;font-size:9pt;line-height:1.7}
 .info{flex:1}.t{font-weight:700;font-size:10pt;margin-bottom:1mm}.price b{font-size:12pt}.s{color:#777;margin-left:2mm;text-decoration:line-through}.url{margin-top:1mm;letter-spacing:.03em}
 .qr{width:30mm;text-align:center}.qr svg{width:24mm;height:24mm}.cap{font-size:6.5pt;color:#555;line-height:1.3;margin-top:1mm}</style></head><body>${pages}</body></html>`;
-  fs.writeFileSync(__dirname + '/letters.html', html);
+  fs.writeFileSync(__dirname + '/' + (process.env.OUT || 'letters.html'), html);
 })();
