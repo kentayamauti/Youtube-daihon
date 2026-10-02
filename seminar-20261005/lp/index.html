@@ -101,6 +101,28 @@ body{padding-bottom:88px}
   .stat .num{font-size:52px;line-height:64px}
   .wrap{padding-left:var(--sp8);padding-right:var(--sp8)}
 }
+
+/* STORY */
+.story{background:#07142f;color:var(--on-navy);position:relative;overflow:hidden}
+.story .eyebrow{color:var(--accent)}
+.story-lead{font-family:var(--sans);font-size:28px;line-height:44px;font-weight:700;margin:0 0 var(--sp8);letter-spacing:.02em}
+.story-lead em{font-style:normal;color:var(--accent)}
+.chapters{list-style:none;margin:0;padding:0 0 0 28px;border-left:2px solid rgba(0,179,214,.35);display:grid;gap:48px}
+.chapter{position:relative}
+.chapter::before{content:"";position:absolute;left:-36px;top:8px;width:14px;height:14px;border-radius:50%;background:#07142f;border:3px solid var(--accent)}
+.chapter .no{font-family:var(--display);font-size:12px;letter-spacing:.16em;font-weight:700;color:var(--accent);display:block;margin-bottom:4px}
+.chapter h3{font-size:21px;line-height:34px;margin:0 0 12px}
+.chapter p{color:#c9d4ea;margin:0 0 12px;max-width:36em}
+.chapter .quote{font-size:19px;line-height:32px;font-weight:700;color:#fff;border-left:4px solid var(--accent);padding:4px 0 4px 16px;margin:16px 0}
+.chapter.turn h3{color:var(--accent)}
+.story-sign{margin-top:56px;padding-top:32px;border-top:1px solid rgba(255,255,255,.15)}
+.story-sign p{color:#c9d4ea;max-width:36em}
+.story-sign .name{font-family:var(--display);font-weight:800;font-size:20px;color:#fff;margin:24px 0 var(--sp8)}
+.reveal{opacity:1;transform:none}
+.js .reveal{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s ease}
+.js .reveal.on{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none;transition:none}}
+@media(min-width:768px){.story-lead{font-size:40px;line-height:60px}.chapter h3{font-size:24px;line-height:38px}}
 </style>
 </head>
 <body>
@@ -131,6 +153,50 @@ body{padding-bottom:88px}
     <div class="grid g2" style="margin-top:var(--sp4)">
       <div class="card"><h3>登録者500人 → 動画3本で1,000人増</h3><p class="muted small" style="margin:0">3年伸び悩んでいた友人の陸上チャンネル。ジャンルを俯瞰し「空いている場所」に企画を打ち込み、総再生4,000時間もこの3本で達成しました。</p></div>
       <div class="card"><h3>副業で「月5万円」の目標を達成</h3><p class="muted small" style="margin:0">親のチャンネル（登録者9,000人近く・現在進行形）。撮影は本人に任せ、サムネの手直しと企画の相談だけ。正しい考え方を共有すれば、作り手が私でなくても結果は出ます。</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ストーリー -->
+<section class="story sec" id="story">
+  <div class="wrap">
+    <p class="eyebrow">STORY</p>
+    <p class="story-lead reveal">前に出て、伸びなかった。<br>裏方に回って、<em>はじめて結果が出た。</em></p>
+    <ol class="chapters">
+      <li class="chapter reveal">
+        <span class="no">CHAPTER 01</span>
+        <h3>全部、自分でやったチャンネルは伸びなかった。</h3>
+        <p>会社員をしながら、企画も、台本も、撮影も、喋りも。全部ひとりで抱えて走ったチャンネルは、思うようには伸びませんでした。</p>
+        <p>正直に言うと、私は喋りがあまり上手くありません。画面の前に立つほど、空回りしていきました。</p>
+      </li>
+      <li class="chapter reveal">
+        <span class="no">CHAPTER 02</span>
+        <h3>勝負を「自分」から「企画」に変えた。</h3>
+        <p>顔を出さず、キャラクターにも頼らない。視聴者が何を求めているかを調べ、空いている場所に企画を置く。地道な作業を積み重ねたチャンネルは、7つ収益化し、1つのチャンネルだけで1.2億回再生されました。</p>
+        <div class="quote">伸びるかどうかを決めるのは、才能でも喋りでもなく、企画だった。</div>
+      </li>
+      <li class="chapter turn reveal">
+        <span class="no">CHAPTER 03</span>
+        <h3>裏から支えたら、人のチャンネルが動き出した。</h3>
+        <p>3年間、登録者500人前後で止まっていた友人の陸上チャンネル。企画とサムネを一緒に考えた3本で、登録者は1,000人増えました。</p>
+        <p>撮影は本人に任せ、サムネの手直しと企画の相談だけを続けた親のチャンネルは、副業の目標「月5万円」を達成しています。</p>
+        <div class="quote">私は前に出るより、裏方で力を発揮するタイプなんだ。</div>
+      </li>
+      <li class="chapter reveal">
+        <span class="no">CHAPTER 04</span>
+        <h3>それでも、止まってしまったチャンネルがある。</h3>
+        <p>結果が出たはずの友人のチャンネルは、いま更新が止まっています。道筋は合っていた。数字も出ていた。それでも、会社員との両立の中で、少しずつ熱量が下がっていきました。</p>
+        <p>本当に熱の伝わる、良い動画なんです。だから今でも、悔しい。</p>
+        <div class="quote">道筋を示すだけでは足りない。続けられる体制まで、一緒につくる必要がある。</div>
+      </li>
+    </ol>
+    <div class="story-sign reveal">
+      <p>だから私は、地域の会社やお店、個人事業主の皆さんの「裏方」になると決めました。</p>
+      <p>あなたの商品やサービスを、それを本当に求めている人に届ける。そのために、企画で道筋を立て、無理なく続けられるペースまで一緒に設計します。前に出るのは、あなたです。私は、その後ろで支え続けます。</p>
+      <p class="name">Ykkn 山内</p>
+      <div class="btns" style="margin-top:0">
+        <a class="btn btn-primary js-form" href="#contact">まずは個別相談で話してみる</a>
+      </div>
     </div>
   </div>
 </section>
@@ -272,6 +338,11 @@ if (FORM_URL) {
     a.href = FORM_URL; a.target = "_blank"; a.rel = "noopener";
   });
 }
+</script>
+<script>
+(function(){var d=document.documentElement;if(!('IntersectionObserver' in window))return;d.classList.add('js');
+var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target);}});},{threshold:.15});
+document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});})();
 </script>
 </body>
 </html>
