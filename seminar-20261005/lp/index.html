@@ -10,246 +10,441 @@
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://ykkn-youtube.com/">
 <link rel="canonical" href="https://ykkn-youtube.com/">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230b1f4b'/><path d='M12 9l12 7-12 7z' fill='%2300b3d6'/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%23ff0000'/><circle cx='16' cy='16' r='9' fill='none' stroke='white' stroke-width='2.4'/><path d='M13.5 11.5v9l7-4.5z' fill='white'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  --surface:#ffffff; --surface-alt:#f3f5f9;
-  --navy:#0b1f4b; --navy-600:#23408e;
-  --accent:#00b3d6; --accent-soft:#e0f6fb;
-  --ink:#121a2e; --ink-muted:#525c70;
-  --on-navy:#ffffff; --on-navy-muted:#9fb0d0;
-  --line:#dde2ec;
-  --sp2:8px; --sp4:16px; --sp8:32px; --sp16:64px;
-  --r-sm:4px; --r-md:12px; --r-full:999px;
-  --display:"Inter","Noto Sans JP",system-ui,sans-serif;
-  --sans:"Noto Sans JP","Hiragino Sans",system-ui,sans-serif;
+  --cream:#f7f5ea; --white:#fff;
+  --sky:#6cc4ea; --sky-soft:#e3f5ff; --sky-mid:#bfe6f8;
+  --navy:#0a3a8c; --navy-deep:#062463;
+  --yellow:#f5b700; --yellow-soft:#fff3c4;
+  --red:#e8291f; --green:#06c755;
+  --mint:#8edcb0; --pink:#f5a8c8; --lav:#c9c2f2;
+  --ink:#3d312a; --ink-muted:#6b5f57;
+  --line:#e6e1cf;
+  --r:28px;
+  --font:"Zen Kaku Gothic New","Hiragino Sans",system-ui,sans-serif;
+  --pop:cubic-bezier(.7,.2,.3,1.4);
 }
 *,*::before,*::after{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{margin:0;background:var(--surface);color:var(--ink);font-family:var(--sans);
-  font-size:16px;line-height:30px;-webkit-font-smoothing:antialiased}
-img{max-width:100%}
-.wrap{width:100%;max-width:1040px;margin:0 auto;padding-left:var(--sp4);padding-right:var(--sp4)}
-.sec{padding-top:var(--sp16);padding-bottom:var(--sp16)}
-.alt{background:var(--surface-alt)}
-.navy{background:var(--navy);color:var(--on-navy)}
-.eyebrow{font-family:var(--display);font-size:12px;line-height:16px;font-weight:700;
-  letter-spacing:.12em;color:var(--navy-600);margin:0 0 var(--sp2)}
-.navy .eyebrow{color:var(--on-navy-muted)}
-h1{font-family:var(--display);font-size:30px;line-height:44px;font-weight:700;margin:0 0 var(--sp4)}
-h2{font-size:24px;line-height:38px;font-weight:700;margin:0 0 var(--sp8)}
-h3{font-size:19px;line-height:30px;font-weight:700;margin:0 0 var(--sp2)}
-p{margin:0 0 var(--sp4);max-width:35em}
+html{-webkit-text-size-adjust:100%}
+@media (pointer:coarse){html{scroll-behavior:smooth}}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--font);font-weight:500;
+  font-size:16px;line-height:1.9;font-feature-settings:"palt";letter-spacing:.03em;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+img{max-width:100%;display:block}
+a{color:inherit}
+.wrap{width:100%;max-width:1080px;margin:0 auto;padding:0 20px}
+section{position:relative;scroll-margin-top:72px}
+.sec{padding:96px 0}
+h1,h2,h3{font-weight:900;line-height:1.45;margin:0}
+h2{font-size:28px;color:var(--navy);margin-bottom:40px}
+h3{font-size:20px}
+p{margin:0 0 16px}
 .muted{color:var(--ink-muted)}
-.navy .muted{color:var(--on-navy-muted)}
-.small{font-size:13px;line-height:22px}
-.btn{display:inline-block;text-decoration:none;font-weight:700;border-radius:var(--r-full);
-  padding:14px 28px;text-align:center}
-.btn-primary{background:var(--accent);color:var(--navy)}
-.btn-secondary{border:1px solid var(--navy);color:var(--navy);background:transparent}
-.navy .btn-secondary{border-color:var(--on-navy);color:var(--on-navy)}
-.btns{display:flex;flex-wrap:wrap;gap:var(--sp4);margin-top:var(--sp8)}
-.badge{display:inline-block;background:var(--accent-soft);color:var(--navy);font-weight:700;
-  font-size:13px;line-height:22px;padding:4px 12px;border-radius:var(--r-sm);margin-bottom:var(--sp4)}
-.grid{display:grid;gap:var(--sp4)}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r-md);padding:var(--sp8)}
-.stat{text-align:center}
-.now{display:inline-block;background:var(--accent-soft);color:var(--navy);font-size:12px;line-height:20px;font-weight:700;padding:0 10px;border-radius:var(--r-full)}
-.stat .num{font-family:var(--display);font-size:40px;line-height:52px;font-weight:800;color:var(--navy-600);display:block}
-.stat .label{display:block;font-weight:700}
-.steps{counter-reset:s;list-style:none;padding:0;margin:0;display:grid;gap:var(--sp4)}
-.steps li{counter-increment:s;background:var(--surface);border:1px solid var(--line);
-  border-radius:var(--r-md);padding:var(--sp8)}
-.steps li::before{content:"STEP " counter(s);font-family:var(--display);font-size:12px;font-weight:700;
-  letter-spacing:.12em;color:var(--navy-600);display:block;margin-bottom:var(--sp2)}
-.check{list-style:none;padding:0;margin:0 0 var(--sp8);display:grid;gap:var(--sp2)}
-.check li{background:var(--accent-soft);border-radius:var(--r-sm);padding:12px var(--sp4)}
-.price{display:flex;flex-wrap:wrap;align-items:baseline;gap:var(--sp2) var(--sp4);margin:var(--sp4) 0}
+.small{font-size:14px;line-height:1.8}
+.center{text-align:center}
+.label{display:inline-block;font-weight:900;font-size:13px;letter-spacing:.14em;color:var(--navy);
+  background:var(--white);border:2px solid var(--navy);border-radius:999px;padding:2px 16px;margin-bottom:16px}
+.mk{background:linear-gradient(transparent 62%,var(--yellow) 62%,var(--yellow) 92%,transparent 92%);padding:0 2px}
+.red{color:var(--red)}
+@media(min-width:768px){br.sp{display:none}}
+
+/* buttons */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;text-decoration:none;font-weight:900;
+  border-radius:999px;padding:16px 32px;text-align:center;font-size:16px;line-height:1.4;
+  transition:transform .3s var(--pop),box-shadow .3s}
+.btn:hover{transform:translateY(-3px)}
+.btn-primary{background:var(--navy);color:#fff;box-shadow:0 6px 0 var(--navy-deep)}
+.btn-primary:hover{box-shadow:0 9px 0 var(--navy-deep)}
+.btn-yellow{background:var(--yellow);color:var(--navy-deep);box-shadow:0 6px 0 #c48f00}
+.btn-line{background:var(--green);color:#fff;box-shadow:0 6px 0 #049a42}
+.btn-ghost{background:#fff;color:var(--navy);border:2px solid var(--navy)}
+.btns{display:flex;flex-wrap:wrap;gap:20px;margin-top:32px}
+.btn .ic{width:22px;height:22px;flex:none}
+.pulse{animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 6px 0 var(--navy-deep),0 0 0 0 rgba(10,58,140,.35)}50%{box-shadow:0 6px 0 var(--navy-deep),0 0 0 14px rgba(10,58,140,0)}}
+
+/* header */
+.hd{position:fixed;inset:0 0 auto 0;height:64px;background:var(--sky);z-index:50;display:flex;align-items:center}
+.hd .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;max-width:1240px}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--navy-deep);font-weight:900;font-size:18px;letter-spacing:.06em}
+.logo svg{width:36px;height:36px;border-radius:10px}
+.hd nav{display:none;gap:28px;font-weight:700;font-size:14px}
+.hd nav a{text-decoration:none;color:var(--navy-deep)}
+.hd .btn{padding:9px 18px;font-size:14px;box-shadow:none}
+body{padding-top:64px}
+
+/* waves */
+.wave{position:absolute;left:0;right:0;height:60px;line-height:0;z-index:2;pointer-events:none}
+.wave svg{width:100%;height:100%;display:block}
+.wave.b{bottom:-59px}
+.wave.t{top:-59px}
+
+/* hero */
+.hero{background:var(--cream);padding:48px 0 120px}
+.hero-grid{display:grid;gap:40px;align-items:center}
+.hero .pill{display:inline-block;background:var(--navy);color:#fff;font-weight:900;font-size:13px;letter-spacing:.12em;border-radius:999px;padding:4px 16px;margin-bottom:18px}
+.hero h1{font-size:34px;color:var(--navy-deep);margin-bottom:24px}
+.hero h1 .big{font-size:1.12em}
+.hero-visual{position:relative;height:340px;max-width:460px;width:100%;margin:0 auto}
+.cloud{position:absolute;inset:6% 4%;background:radial-gradient(circle at 40% 35%,#fff 0,var(--sky-soft) 38%,var(--sky-mid) 100%);
+  border-radius:46% 54% 52% 48%/55% 45% 55% 45%;animation:blob 14s ease-in-out infinite}
+@keyframes blob{0%,100%{border-radius:46% 54% 52% 48%/55% 45% 55% 45%}50%{border-radius:56% 44% 42% 58%/45% 58% 42% 55%}}
+.hero-icon{position:absolute;left:50%;top:50%;width:150px;height:150px;margin:-75px 0 0 -75px;border-radius:34px;
+  box-shadow:0 14px 0 rgba(6,36,99,.15);animation:float 4s ease-in-out infinite}
+@keyframes float{0%,100%{translate:0 0;rotate:-3deg}50%{translate:0 -14px;rotate:3deg}}
+.chip{position:absolute;background:#fff;border-radius:999px;padding:6px 16px;font-weight:900;font-size:14px;color:var(--navy);
+  box-shadow:0 4px 0 rgba(6,36,99,.12);white-space:nowrap}
+.chip b{color:var(--red);font-size:18px}
+.chip.c1{left:0;top:12%;animation:float 5s ease-in-out infinite}
+.chip.c2{right:0;top:58%;animation:float 6s ease-in-out -1s infinite}
+.chip.c3{left:8%;bottom:8%;animation:float 5.5s ease-in-out -2s infinite}
+.deco{position:absolute;pointer-events:none}
+.deco.tri{width:0;height:0;border-left:26px solid var(--yellow);border-top:16px solid transparent;border-bottom:16px solid transparent;right:14%;top:4%;animation:spin 9s linear infinite}
+.deco.ring{width:34px;height:34px;border:7px solid var(--pink);border-radius:50%;right:6%;bottom:18%;animation:float 4.5s ease-in-out infinite}
+.deco.spark{color:var(--yellow);font-size:30px;left:18%;top:-2%;animation:twinkle 2.6s ease-in-out infinite}
+@keyframes spin{to{rotate:360deg}}
+@keyframes twinkle{0%,100%{scale:1;opacity:1}50%{scale:.6;opacity:.5}}
+.tate{display:none}
+
+/* results band */
+.band{background-color:var(--navy);color:#fff}
+.band::before{content:"";position:absolute;inset:0;opacity:.12;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Ccircle cx='20' cy='20' r='11' fill='none' stroke='white' stroke-width='3'/%3E%3Cpath d='M17 14v12l9-6z' fill='white'/%3E%3Cpath d='M60 56l4 8 8 1-6 6 2 8-8-4-8 4 2-8-6-6 8-1z' fill='white'/%3E%3C/svg%3E");
+  background-size:80px 80px;animation:move_bg 40s linear infinite}
+@keyframes move_bg{to{background-position:320px -320px}}
+.band .wrap{position:relative}
+.band h2{color:#fff}
+.band h2 .y{color:var(--yellow)}
+.stats{display:grid;gap:18px}
+.stat{background:#fff;color:var(--ink);border-radius:var(--r);padding:28px 20px 24px;text-align:center;position:relative}
+.stat .now{position:absolute;top:-14px;left:50%;translate:-50% 0;background:var(--red);color:#fff;font-weight:900;font-size:12px;border-radius:999px;padding:2px 14px;white-space:nowrap}
+.stat .num{display:block;font-weight:900;font-size:44px;line-height:1.2;color:var(--navy)}
+.stat .num small{font-size:.5em}
+.stat .lb{display:block;font-weight:900}
+.cases{display:grid;gap:18px;margin-top:18px}
+.case{background:rgba(255,255,255,.1);border:2px dashed rgba(255,255,255,.45);border-radius:var(--r);padding:24px}
+.case h3{color:var(--yellow);font-size:18px;margin-bottom:8px}
+.case p{color:#dfe7f7;margin:0;font-size:14px}
+
+/* story */
+.story{background:var(--navy-deep);color:#fff}
+.story .label{background:transparent;color:var(--yellow);border-color:var(--yellow)}
+.story-lead{font-size:30px;line-height:1.55;font-weight:900;margin:0 0 56px}
+.story-lead em{font-style:normal;color:var(--yellow)}
+.chapters{list-style:none;margin:0;padding:0 0 0 30px;border-left:3px dotted rgba(245,183,0,.6);display:grid;gap:56px}
+.chapter{position:relative}
+.chapter .no{position:absolute;left:-62px;top:-6px;width:58px;height:50px;background:var(--yellow);color:var(--navy-deep);
+  font-weight:900;font-size:18px;display:grid;place-items:center;border-radius:48% 52% 45% 55%/55% 50% 50% 45%;rotate:-10deg}
+.chapter.on .no{animation:goron 1s ease .3s}
+@keyframes goron{0%{rotate:-10deg}25%{rotate:4deg}50%{rotate:-14deg}75%{rotate:-4deg}100%{rotate:-10deg}}
+.chapter h3{font-size:21px;margin:0 0 12px 8px}
+.chapter p{color:#cdd8f0;margin-left:8px;max-width:36em}
+.chapter.turn h3{color:var(--yellow)}
+.quote{position:relative;margin:20px 0 0 8px;background:#fff;color:var(--navy-deep);font-weight:900;border-radius:22px;padding:16px 22px;font-size:17px;line-height:1.7;max-width:36em}
+.quote::after{content:"";position:absolute;left:28px;bottom:-12px;border:12px solid transparent;border-top-color:#fff;border-bottom:0}
+.sign{margin-top:72px;background:#fff;color:var(--ink);border-radius:var(--r);padding:32px 24px}
+.sign .name{font-weight:900;font-size:22px;color:var(--navy);margin:24px 0}
+
+/* challenges */
+.worry{background:var(--cream)}
+.worry h2{text-align:center;color:var(--ink);font-size:26px}
+.worry h2 .big{font-size:1.15em;color:var(--navy)}
+.bubbles{position:relative;max-width:820px;margin:0 auto;padding:36px 12px 48px;display:grid;gap:22px}
+.bubbles::before{content:"";position:absolute;inset:0;background:radial-gradient(circle at 50% 40%,#fff 0,var(--sky-soft) 45%,var(--sky-mid) 100%);
+  border-radius:52% 48% 46% 54%/50% 56% 44% 50%;z-index:0}
+.bub{position:relative;z-index:1;border-radius:999px;padding:14px 24px;font-weight:900;font-size:15px;line-height:1.6;max-width:92%;
+  box-shadow:0 4px 0 rgba(0,0,0,.06)}
+.bub::after{content:"";position:absolute;bottom:-14px;width:14px;height:14px;border-radius:50%;background:inherit}
+.bub:nth-child(odd){justify-self:start}.bub:nth-child(odd)::after{left:34px}
+.bub:nth-child(even){justify-self:end}.bub:nth-child(even)::after{right:34px}
+.bub.m{background:var(--mint)}.bub.y{background:#ffdc3f}.bub.p{background:var(--pink)}.bub.s{background:#9fd8f2}.bub.l{background:var(--lav)}
+.solve{position:relative;max-width:760px;margin:24px auto 0;background:#fff;border-radius:var(--r);padding:36px 24px 28px;text-align:center;box-shadow:0 8px 0 rgba(6,36,99,.08)}
+.solve h3{font-size:20px;color:var(--ink);margin-bottom:16px}
+.solve h3 .navy{color:var(--navy)}
+.solve h3 .red{font-size:1.25em}
+.solve h3 u{text-decoration:none;background:linear-gradient(transparent 80%,var(--yellow) 80%)}
+.stamp{position:absolute;right:-6px;top:-30px;width:78px;height:78px;border:4px solid var(--red);border-radius:50%;color:var(--red);
+  font-weight:900;font-size:22px;display:grid;place-items:center;rotate:14deg;background:rgba(255,255,255,.85);opacity:0}
+.solve.on .stamp{animation:stamp .5s var(--pop) .5s forwards}
+@keyframes stamp{0%{opacity:0;scale:2.2;rotate:-20deg}100%{opacity:1;scale:1;rotate:14deg}}
+
+/* support */
+.support{background:var(--sky-soft)}
+.cards{display:grid;gap:40px}
+.card{position:relative;background:#fff;border:3px dotted var(--navy);border-radius:36px;padding:44px 24px 28px}
+.card h3{color:var(--navy);margin-bottom:8px}
+.tag{position:absolute;right:-8px;top:-34px;width:84px;height:72px;background:var(--navy);color:#fff;font-weight:900;font-size:18px;
+  display:grid;place-items:center;border-radius:50% 50% 46% 54%/58% 56% 44% 42%;rotate:-12deg}
+.tag::before,.tag::after{content:"";position:absolute;top:-6px;width:24px;height:24px;background:var(--navy);border-radius:50%}
+.tag::before{left:8px}.tag::after{right:8px}
+.tag.y{background:var(--yellow);color:var(--navy-deep)}.tag.y::before,.tag.y::after{background:var(--yellow)}
+.card.on .tag{animation:rinrin .9s ease .4s}
+@keyframes rinrin{0%{rotate:-12deg}25%{rotate:-4deg}50%{rotate:-12deg}75%{rotate:-4deg}100%{rotate:-12deg}}
+.badge{display:inline-block;background:var(--yellow-soft);color:var(--navy-deep);font-weight:900;font-size:13px;border-radius:999px;padding:3px 14px;margin-bottom:12px}
+.price{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 14px;margin:12px 0 16px}
 .price s{color:var(--ink-muted)}
-.price strong{font-family:var(--display);font-size:32px;line-height:40px;color:var(--navy)}
-.feature{border:2px solid var(--accent)}
-.plan{margin-top:var(--sp4)}
-details{border-bottom:1px solid var(--line);padding:var(--sp4) 0}
-summary{font-weight:700;cursor:pointer;list-style:none}
+.price strong{font-weight:900;font-size:36px;line-height:1.2;color:var(--red)}
+.list{margin:0 0 16px;padding-left:1.2em}
+.list li{margin-bottom:4px}
+
+/* flow */
+.flow{background:var(--cream)}
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:20px;counter-reset:s}
+.steps li{counter-increment:s;background:#fff;border-radius:var(--r);padding:24px 22px 22px 84px;position:relative;box-shadow:0 6px 0 rgba(6,36,99,.06)}
+.steps li::before{content:counter(s);position:absolute;left:20px;top:22px;width:46px;height:46px;border-radius:50%;background:var(--yellow);
+  color:var(--navy-deep);font-weight:900;font-size:22px;display:grid;place-items:center}
+.steps h3{font-size:18px;color:var(--navy);margin-bottom:6px}
+.steps p{margin:0}
+
+/* faq */
+.faq{background:#fff}
+details{background:var(--cream);border-radius:20px;padding:18px 22px;margin-bottom:12px}
+summary{font-weight:900;cursor:pointer;list-style:none;display:flex;gap:12px;align-items:flex-start;color:var(--navy-deep)}
 summary::-webkit-details-marker{display:none}
-summary::after{content:"＋";float:right;color:var(--navy-600)}
+summary::before{content:"Q";flex:none;width:28px;height:28px;border-radius:50%;background:var(--navy);color:#fff;display:grid;place-items:center;font-size:14px;line-height:1}
+summary::after{content:"＋";margin-left:auto;color:var(--navy)}
 details[open] summary::after{content:"−"}
-details p{margin:var(--sp4) 0 0;color:var(--ink-muted)}
-footer{background:var(--navy);color:var(--on-navy-muted);padding:var(--sp8) 0;font-size:13px;line-height:22px}
-footer a{color:var(--on-navy)}
-.sticky{position:fixed;left:0;right:0;bottom:0;background:var(--surface);border-top:1px solid var(--line);
-  padding:12px var(--sp4);padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));
-  display:flex;gap:var(--sp2);z-index:20}
-.sticky .btn{flex:1;padding:12px 8px;font-size:14px}
-.btn-line{background:#06C755;color:#fff}
-.line-box{display:flex;flex-wrap:wrap;gap:var(--sp8);align-items:center}
-.line-box img{width:160px;height:160px;border:1px solid var(--line);border-radius:var(--r-md);display:none}
-@media(min-width:768px){.line-box img{display:block}}
-body{padding-bottom:88px}
-[hidden]{display:none!important}
+details p{margin:12px 0 0 40px;color:var(--ink-muted)}
+
+/* line */
+.linesec{background:#fff}
+.linebox{background:#e9f9ef;border-radius:36px;padding:36px 24px;display:flex;flex-wrap:wrap;gap:28px;align-items:center}
+.linebox img{width:150px;height:150px;border-radius:18px;background:#fff;padding:8px;display:none}
+.linebox h2{color:#03803a;margin-bottom:16px;font-size:24px}
+@media(min-width:768px){.linebox h2{font-size:32px}}
+
+/* contact */
+.contact{background:linear-gradient(var(--sky-soft),var(--sky-mid));text-align:center}
+.contact h2{color:var(--navy-deep)}
+.contact .lead{font-weight:900;color:var(--navy);margin-bottom:8px}
+
+footer{background:var(--navy-deep);color:#b9c6e4;padding:48px 0 40px;font-size:13px;line-height:2}
+footer a{color:#fff}
+
+/* sticky (mobile) */
+.sticky{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.96);border-top:1px solid var(--line);
+  padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));display:flex;gap:10px;z-index:40}
+.sticky .btn{flex:1;padding:12px 8px;font-size:14px;box-shadow:none}
+body{padding-bottom:84px}
+
+/* corner character */
+.buddy{position:fixed;right:14px;bottom:96px;z-index:45;text-decoration:none;display:flex;flex-direction:column;align-items:center;gap:4px;
+  opacity:0;scale:0;transition:opacity .3s,scale .45s var(--pop)}
+.buddy.show{opacity:1;scale:1}
+.buddy img{width:58px;height:58px;border-radius:16px;box-shadow:0 5px 0 rgba(6,36,99,.18);animation:float 3.6s ease-in-out infinite}
+.buddy span{background:#fff;color:var(--navy-deep);font-weight:900;font-size:11px;border-radius:999px;padding:2px 10px;box-shadow:0 2px 0 rgba(0,0,0,.08);white-space:nowrap}
+
+/* reveal motion */
+.js .rv{opacity:0;translate:0 28px;transition:opacity .8s ease,translate .8s cubic-bezier(.2,.7,.2,1)}
+.js .rv.on{opacity:1;translate:0 0}
+.js .pop{opacity:0;scale:.4;transition:opacity .3s ease,scale .45s var(--pop)}
+.js .pop.on{opacity:1;scale:1}
+.js .scrub{opacity:var(--v,0);filter:blur(calc(10px * (1 - var(--v,0))))}
+
 @media(min-width:768px){
+  .sec{padding:128px 0}
+  h2{font-size:36px}
+  .hd nav{display:flex}
+  .hero{padding:72px 0 150px}
+  .hero-grid{grid-template-columns:1.15fr .85fr}
+  .hero h1{font-size:44px}
+  .hero h1 .big{font-size:1.04em}
+  .hero h1 br.sp{display:none}
+  .hero-visual{height:440px}
+  .hero-icon{width:190px;height:190px;margin:-95px 0 0 -95px;border-radius:42px}
+  .tate{display:block;position:absolute;right:-6px;top:4%;writing-mode:vertical-rl;background:var(--yellow);color:var(--navy-deep);
+    font-weight:900;font-size:20px;letter-spacing:.2em;padding:18px 8px;border-radius:999px}
+  .stats{grid-template-columns:repeat(3,1fr)}
+  .cases{grid-template-columns:1fr 1fr}
+  .story-lead{font-size:46px}
+  .chapters{padding-left:48px}
+  .chapter .no{left:-84px;width:68px;height:58px;font-size:20px}
+  .chapter h3{font-size:25px}
+  .sign{padding:44px 48px}
+  .worry h2{font-size:34px}
+  .bubbles{padding:56px 40px 64px}
+  .bub{font-size:17px}
+  .solve h3{font-size:30px}
+  .cards{grid-template-columns:1fr 1fr}
+  .card.wide{grid-column:1/-1}
+  .card{padding:52px 40px 36px}
+  .steps{grid-template-columns:repeat(4,1fr)}
+  .steps li{padding:84px 22px 24px}
+  .steps li::before{left:22px;top:22px}
+  .linebox{padding:48px 56px}
+  .linebox img{display:block}
   body{padding-bottom:0}
   .sticky{display:none}
-  .sec{padding-top:112px;padding-bottom:112px}
-  h1{font-size:44px;line-height:60px}
-  h2{font-size:32px;line-height:46px}
-  .g2{grid-template-columns:1fr 1fr}
-  .g3{grid-template-columns:repeat(3,1fr)}
-  .stat .num{font-size:52px;line-height:64px}
-  .wrap{padding-left:var(--sp8);padding-right:var(--sp8)}
+  .buddy{bottom:24px;right:24px}
+  .buddy img{width:72px;height:72px;border-radius:20px}
 }
-
-/* STORY */
-.story{background:#07142f;color:var(--on-navy);position:relative;overflow:hidden}
-.story .eyebrow{color:var(--accent)}
-.story-lead{font-family:var(--sans);font-size:28px;line-height:44px;font-weight:700;margin:0 0 var(--sp8);letter-spacing:.02em}
-.story-lead em{font-style:normal;color:var(--accent)}
-.chapters{list-style:none;margin:0;padding:0 0 0 28px;border-left:2px solid rgba(0,179,214,.35);display:grid;gap:48px}
-.chapter{position:relative}
-.chapter::before{content:"";position:absolute;left:-36px;top:8px;width:14px;height:14px;border-radius:50%;background:#07142f;border:3px solid var(--accent)}
-.chapter .no{font-family:var(--display);font-size:12px;letter-spacing:.16em;font-weight:700;color:var(--accent);display:block;margin-bottom:4px}
-.chapter h3{font-size:21px;line-height:34px;margin:0 0 12px}
-.chapter p{color:#c9d4ea;margin:0 0 12px;max-width:36em}
-.chapter .quote{font-size:19px;line-height:32px;font-weight:700;color:#fff;border-left:4px solid var(--accent);padding:4px 0 4px 16px;margin:16px 0}
-.chapter.turn h3{color:var(--accent)}
-.story-sign{margin-top:56px;padding-top:32px;border-top:1px solid rgba(255,255,255,.15)}
-.story-sign p{color:#c9d4ea;max-width:36em}
-.story-sign .name{font-family:var(--display);font-weight:800;font-size:20px;color:#fff;margin:24px 0 var(--sp8)}
-.reveal{opacity:1;transform:none}
-.js .reveal{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .8s ease}
-.js .reveal.on{opacity:1;transform:none}
-@media (prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none;transition:none}}
-@media(min-width:768px){.story-lead{font-size:40px;line-height:60px}.chapter h3{font-size:24px;line-height:38px}}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .js .rv,.js .pop{opacity:1;translate:0 0;scale:1}
+  .js .scrub{opacity:1;filter:none}
+  .stamp{opacity:1}
+}
 </style>
 </head>
 <body>
 
-<!-- HERO -->
-<section class="navy sec">
+<header class="hd">
   <div class="wrap">
-    <p class="eyebrow">FOR SEMINAR MEMBERS</p>
-    <h1>セミナーで学んだ考え方を、<br>あなたのチャンネルに。</h1>
-    <p class="muted">「ゼロから始めるYouTubeチャンネル運用セミナー」を受講いただき、ありがとうございました。成功ライン・空いている場所・続けられるペースは、一人ひとり違います。受講者の方限定で、あなたのチャンネルに合わせた個別相談をご用意しました。</p>
-    <div class="btns">
-      <a class="btn btn-primary js-form" href="#contact">個別相談を申し込む</a>
-      <a class="btn btn-line" href="https://line.me/R/ti/p/@031svhsj" target="_blank" rel="noopener">LINEで次回セミナーの招待を受け取る</a>
+    <a class="logo" href="#top" aria-label="トップへ">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="#ff0000"/><circle cx="16" cy="16" r="9" fill="none" stroke="#fff" stroke-width="2.4"/><path d="M13.5 11.5v9l7-4.5z" fill="#fff"/></svg>
+      Ykkn 山内
+    </a>
+    <nav aria-label="ページ内">
+      <a href="#results">実績</a><a href="#story">ストーリー</a><a href="#support">サポート</a><a href="#faq">よくある質問</a>
+    </nav>
+    <a class="btn btn-yellow js-form" href="#contact">個別相談</a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="pill rv">セミナー受講者の方へ</span>
+      <h1 class="rv" style="transition-delay:.1s">セミナーで学んだ<br>考え方を、<br><span class="mk big">あなたの<br class="sp">チャンネルに。</span></h1>
+      <p class="rv" style="transition-delay:.2s">「ゼロから始めるYouTubeチャンネル運用セミナー」を受講いただき、ありがとうございました。成功ライン・空いている場所・続けられるペースは、一人ひとり違います。受講者の方限定で、あなたのチャンネルに合わせた個別相談をご用意しました。</p>
+      <div class="btns rv" style="transition-delay:.3s">
+        <a class="btn btn-primary pulse js-form" href="#contact">個別相談を申し込む</a>
+        <a class="btn btn-line" href="https://line.me/R/ti/p/@031svhsj" target="_blank" rel="noopener">LINEで次回セミナーの招待を受け取る</a>
+      </div>
+    </div>
+    <div class="hero-visual" aria-hidden="true">
+      <div class="cloud"></div>
+      <span class="deco spark">✦</span><span class="deco tri"></span><span class="deco ring"></span>
+      <img class="hero-icon pop" src="ykkn_icon.png" alt="">
+      <span class="chip c1 pop" style="transition-delay:.4s">登録者 <b>70万人超</b></span>
+      <span class="chip c2 pop" style="transition-delay:.55s"><b>1.2億回</b> 再生</span>
+      <span class="chip c3 pop" style="transition-delay:.7s">顔出しなし <b>7ch</b> 収益化</span>
+      <span class="tate">企画で、伸ばす。</span>
     </div>
   </div>
+  <div class="wave b" style="color:var(--cream)"><svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0 0h1440v20c-180 40-360 40-540 10S540-5 360 20 120 60 0 30z" fill="currentColor"/></svg></div>
 </section>
 
 <!-- 実績 -->
-<section class="sec alt" id="results">
+<section class="band sec" id="results">
   <div class="wrap">
-    <p class="eyebrow">RESULTS</p>
-    <h2>会社員をしながら、企画で伸ばしてきました。</h2>
-    <div class="grid g3">
-      <div class="card stat"><span class="now">現在進行形</span><span class="num">70万人超</span><span class="label">YouTube総登録者数</span><span class="muted small">TikTok・Instagramでも約3万人</span></div>
-      <div class="card stat"><span class="now">現在進行形</span><span class="num">1.2億回</span><span class="label">総再生回数（1チャンネル）</span><span class="muted small">Shortsではなく通常動画の実績</span></div>
-      <div class="card stat"><span class="num">7ch</span><span class="label">顔出しなしで収益化</span><span class="muted small">ほぼ1年で収益化の条件をクリア</span></div>
+    <div class="center"><span class="label rv" style="background:transparent;color:#fff;border-color:#fff">RESULTS</span></div>
+    <h2 class="center scrub">会社員をしながら、<span class="y">企画</span>で伸ばしてきました。</h2>
+    <div class="stats">
+      <div class="stat pop"><span class="now">現在進行形</span><span class="num"><span data-count="70">70</span><small>万人超</small></span><span class="lb">YouTube総登録者数</span><span class="muted small">TikTok・Instagramでも約3万人</span></div>
+      <div class="stat pop" style="transition-delay:.12s"><span class="now">現在進行形</span><span class="num"><span data-count="1.2" data-dec="1">1.2</span><small>億回</small></span><span class="lb">総再生回数（1チャンネル）</span><span class="muted small">Shortsではなく通常動画の実績</span></div>
+      <div class="stat pop" style="transition-delay:.24s"><span class="num"><span data-count="7">7</span><small>ch</small></span><span class="lb">顔出しなしで収益化</span><span class="muted small">ほぼ1年で収益化の条件をクリア</span></div>
     </div>
-    <div class="grid g2" style="margin-top:var(--sp4)">
-      <div class="card"><h3>登録者500人 → 動画3本で1,000人増</h3><p class="muted small" style="margin:0">3年伸び悩んでいた友人の陸上チャンネル。ジャンルを俯瞰し「空いている場所」に企画を打ち込み、総再生4,000時間もこの3本で達成しました。</p></div>
-      <div class="card"><h3>副業で「月5万円」の目標を達成</h3><p class="muted small" style="margin:0">親のチャンネル（登録者9,000人近く・現在進行形）。撮影は本人に任せ、サムネの手直しと企画の相談だけ。正しい考え方を共有すれば、作り手が私でなくても結果は出ます。</p></div>
+    <div class="cases">
+      <div class="case rv"><h3>登録者500人 → 動画3本で1,000人増</h3><p>3年伸び悩んでいた友人の陸上チャンネル。ジャンルを俯瞰し「空いている場所」に企画を打ち込み、総再生4,000時間もこの3本で達成しました。</p></div>
+      <div class="case rv" style="transition-delay:.12s"><h3>副業で「月5万円」の目標を達成</h3><p>親のチャンネル（登録者9,000人近く・現在進行形）。撮影は本人に任せ、サムネの手直しと企画の相談だけ。正しい考え方を共有すれば、作り手が私でなくても結果は出ます。</p></div>
     </div>
   </div>
+  <div class="wave b" style="color:var(--navy)"><svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0 0h1440v30c-200-40-400 30-620 20S380 0 200 25 60 50 0 40z" fill="currentColor"/></svg></div>
 </section>
 
 <!-- ストーリー -->
 <section class="story sec" id="story">
   <div class="wrap">
-    <p class="eyebrow">STORY</p>
-    <p class="story-lead reveal">前に出て、伸びなかった。<br>裏方に回って、<em>はじめて結果が出た。</em></p>
+    <span class="label rv">STORY</span>
+    <p class="story-lead scrub">前に出て、伸びなかった。<br>裏方に回って、<em>はじめて結果が出た。</em></p>
     <ol class="chapters">
-      <li class="chapter reveal">
-        <span class="no">CHAPTER 01</span>
+      <li class="chapter rv">
+        <span class="no">01</span>
         <h3>プロ野球選手になりたかった。</h3>
         <p>幼いころからの夢は、プロ野球選手。高校を卒業するまで、学生時代のすべてを野球に打ち込みました。</p>
         <div class="quote">あのころ身につけた熱量と行動力が、いまの私につながっている。</div>
       </li>
-      <li class="chapter reveal">
-        <span class="no">CHAPTER 02</span>
+      <li class="chapter rv">
+        <span class="no">02</span>
         <h3>会社員を辞めたい。その一心で、失敗を重ねた。</h3>
         <p>社会に出てからの原動力は、「会社員を辞めたい」という思いでした。目標は、毎月30万円を安定して稼ぐこと。</p>
         <p>物販、プログラミング……いくつもの副業に挑戦しては、失敗してきました。それでも、目標から目をそらさずに進み続けた。失敗を重ねても立ち上がれること。それが、私の強さだと思っています。</p>
       </li>
-      <li class="chapter reveal">
-        <span class="no">CHAPTER 03</span>
+      <li class="chapter rv">
+        <span class="no">03</span>
         <h3>YouTubeで、前に出た。でも、伸びなかった。</h3>
         <p>たどり着いたのが、YouTubeでした。会社員をしながら、企画も、台本も、撮影も、喋りも全部ひとりで。でも、思うようには伸びませんでした。正直に言うと、私は喋りがあまり上手くありません。</p>
         <p>そこで、勝負を「自分」から「企画」に変えました。顔を出さず、視聴者が求めるものを調べ、空いている場所に企画を置く。地道な作業を積み重ねたチャンネルは7つ収益化し、1つのチャンネルだけで1.2億回再生されました。</p>
         <div class="quote">伸びるかどうかを決めるのは、才能でも喋りでもなく、企画だった。</div>
       </li>
-      <li class="chapter turn reveal">
-        <span class="no">CHAPTER 04</span>
+      <li class="chapter turn rv">
+        <span class="no">04</span>
         <h3>誰かを支えたとき、いちばん心が動いた。</h3>
         <p>3年間、登録者500人前後で止まっていた友人の陸上チャンネル。企画とサムネを一緒に考えた3本で、登録者は1,000人増えました。</p>
         <p>親のチャンネルは、副業の目標「月5万円」を達成しました。正直、その数字は「いける」と思っていました。それよりも嬉しかったのは、自分の力で、親の生活が良くなる未来をつくれたことです。</p>
         <p>いまは、YouTubeに取り組む方の生活や人生の相談にも乗っています。少しずつ元気を取り戻したり、小さな成功を報告してくれたりするたびに、心から嬉しくなる。野球でも、子どもに教えるのが好きでした。</p>
         <div class="quote">私は前に出る人間ではなく、後ろから支える人間なんだ。そう肌で感じています。</div>
       </li>
-      <li class="chapter reveal">
-        <span class="no">CHAPTER 05</span>
+      <li class="chapter rv">
+        <span class="no">05</span>
         <h3>それでも、止まってしまったチャンネルがある。</h3>
         <p>結果が出たはずの友人のチャンネルは、いま更新が止まっています。道筋には自信がありました。数字も、実際に出ていました。</p>
         <p>それでも、会社員をしながら、あれだけ熱量の高い動画を作り続けるのは難しい。私たちは、その壁に直面しました。本当に熱の伝わる、良い動画なんです。だから今でも、悔しい。</p>
         <div class="quote">道筋を示すだけでは足りない。続けられる体制まで、一緒につくる必要がある。</div>
       </li>
-      <li class="chapter turn reveal">
-        <span class="no">CHAPTER 06</span>
+      <li class="chapter turn rv">
+        <span class="no">06</span>
         <h3>この力を、地元・高砂の会社のために。</h3>
         <p>会社やお店なら、チャンネルを「仕事」として続ける体制をつくれます。そして、私の力を全面的に使っていただける。</p>
         <p>高砂は、私の地元です。高砂周辺の企業の皆さんの力になって、地域を元気にすることに携わりたい。そして何より、私はYouTubeが好きです。YouTubeで積み上げてきた知見や知識を、皆さんのYouTubeに、そしてほかのSNSにも使ってもらえたらと思っています。</p>
         <div class="quote">YouTubeで得たすべてを、地元の会社の力に。</div>
       </li>
     </ol>
-    <div class="story-sign reveal">
+    <div class="sign rv">
       <p>そんな中、塩谷会計事務所さんから「セミナーを開けませんか」とお声がけをいただきました。教えること、誰かの成長を支えること。それが自分に合っていると感じ、今回はじめてセミナーを開くことにしました。</p>
       <p>あなたの商品やサービスを、それを本当に求めている人に届ける。そのために、YouTubeやSNSで企画の道筋を立て、無理なく続けられるペースまで一緒に設計します。前に出るのは、あなたです。私は、その後ろで支え続けます。</p>
       <p>はじめての挑戦なので、至らないところもあるかもしれません。それでも、こんな私でよければ、どうぞよろしくお願いいたします。</p>
       <p class="name">Ykkn 山内</p>
-      <div class="btns" style="margin-top:0">
-        <a class="btn btn-primary js-form" href="#contact">まずは個別相談で話してみる</a>
-      </div>
+      <a class="btn btn-primary js-form" href="#contact">まずは個別相談で話してみる</a>
+    </div>
+  </div>
+  <div class="wave b" style="color:var(--navy-deep)"><svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0 0h1440v28c-160 30-340 34-520 8S560 0 380 26 100 52 0 30z" fill="currentColor"/></svg></div>
+</section>
+
+<!-- 悩み -->
+<section class="worry sec">
+  <div class="wrap">
+    <h2 class="scrub">受講後、こんなところで<br><span class="big">止まっていませんか？</span></h2>
+    <div class="bubbles">
+      <div class="bub m pop">自分のジャンルの「成功ライン（相場）」がどのくらいか分からない…</div>
+      <div class="bub y pop" style="transition-delay:.12s">競合を見ても、どこが激戦区で、どこが空いているのか判断できない…</div>
+      <div class="bub p pop" style="transition-delay:.24s">集客・商品販売・広告収益のどれを狙うかで、戦い方をどう変えればいいか迷う…</div>
+      <div class="bub s pop" style="transition-delay:.36s">本業が忙しく、無理なく続けられるペースの作り方が分からない…</div>
+      <div class="bub l pop" style="transition-delay:.48s">会社のチャンネルとして、チャンネルページや概要欄をどう整えればいいか知りたい…</div>
+    </div>
+    <div class="solve rv">
+      <span class="stamp" aria-hidden="true">解決</span>
+      <h3><span class="navy">そんな悩み、</span><br><u>個別相談で一緒に<span class="red">解決</span>します！</u></h3>
+      <p class="muted" style="margin:0">ここから先は、一般論ではなくあなたのジャンルと目的を見ながら判断する段階です。個別相談では、あなたのチャンネル（これから始める方は予定しているジャンル）を事前に拝見したうえで、道筋とペースを一緒に整理します。</p>
     </div>
   </div>
 </section>
 
-<!-- 悩み -->
-<section class="sec">
-  <div class="wrap">
-    <p class="eyebrow">CHALLENGES</p>
-    <h2>受講後、こんなところで止まっていませんか。</h2>
-    <ul class="check">
-      <li>自分のジャンルの「成功ライン（相場）」がどのくらいか分からない</li>
-      <li>競合を見ても、どこが激戦区で、どこが空いているのか判断できない</li>
-      <li>集客・商品販売・広告収益のどれを狙うかで、戦い方をどう変えればいいか迷う</li>
-      <li>本業が忙しく、無理なく続けられるペースの作り方が分からない</li>
-      <li>会社のチャンネルとして、チャンネルページや概要欄をどう整えればいいか知りたい</li>
-    </ul>
-    <p class="muted">ここから先は、一般論ではなくあなたのジャンルと目的を見ながら判断する段階です。個別相談では、あなたのチャンネル（これから始める方は予定しているジャンル）を事前に拝見したうえで、道筋とペースを一緒に整理します。</p>
-  </div>
-</section>
-
 <!-- 提供内容 -->
-<section class="sec alt">
+<section class="support sec" id="support">
+  <div class="wave t" style="color:var(--sky-soft)"><svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0 60h1440V30c-180-30-360-30-560 0S460 60 280 32 80 20 0 36z" fill="currentColor"/></svg></div>
   <div class="wrap">
-    <p class="eyebrow">SUPPORT</p>
-    <h2>受講者特典：あなたのチャンネルに合わせた個別相談</h2>
-    <div class="grid g2">
-      <div class="card feature">
+    <div class="center"><span class="label rv">SUPPORT</span></div>
+    <h2 class="center scrub">受講者特典：<br>あなたのチャンネルに<br class="sp">合わせた個別相談</h2>
+    <div class="cards">
+      <div class="card rv">
+        <span class="tag" aria-hidden="true">相談</span>
         <span class="badge">受講者限定の特別価格</span>
         <h3>個別相談（30分／オンライン・対面）</h3>
         <div class="price"><s>通常 30,000円</s><strong>15,000円</strong><span class="muted small">（税込・30分）</span></div>
         <p class="muted small">業種・目的をお聞きして、チャンネルの方向性づくりと、続けられるペースの設計を一緒に整理します。Zoomでのオンライン、または対面からお選びいただけます。</p>
-        <p class="small" style="font-weight:700">特別価格のお申し込み期限：2026年10月10日（土）まで</p>
+        <p class="small" style="font-weight:900">特別価格のお申し込み期限：2026年10月10日（土）まで</p>
         <a class="btn btn-primary js-form" href="#contact">個別相談を申し込む</a>
       </div>
-      <div class="card">
+      <div class="card rv" style="transition-delay:.12s">
+        <span class="tag y" aria-hidden="true">整理</span>
         <h3>相談で整理すること</h3>
-        <ul class="muted small" style="padding-left:1.2em;margin:0">
+        <ul class="list muted">
           <li>あなたのジャンルの成功ライン（再生数の相場）</li>
           <li>激戦区と、まだ空いている企画の見つけ方</li>
           <li>集客・商品販売・広告収益、目的別の戦い方</li>
@@ -257,88 +452,98 @@ body{padding-bottom:88px}
           <li>本業と両立できる投稿ペースの設計</li>
         </ul>
       </div>
-    </div>
-    <div class="card plan" id="plan">
-      <span class="badge">先着5社限定・今後値上げ予定</span>
-      <h3>月額 伴走サポート</h3>
-      <div class="price"><strong>月額 100,000円</strong><span class="muted small">（税抜）</span></div>
-      <ul class="muted small" style="padding-left:1.2em;margin:0 0 var(--sp4)">
-        <li><strong>週1回のミーティング</strong>：企画・サムネ・数字の振り返りを一緒に進めます</li>
-        <li><strong>Discordでいつでも質問</strong>：やりながら出てきた「分からない」を、その都度聞けます</li>
-      </ul>
-      <p class="muted small">個別相談で決めた方向性をもとに進めます。期間などの詳細は、個別相談のあとにご相談のうえ決めます。</p>
-      <p class="small" style="font-weight:700">この価格は先着5社までです。月額料金は今後値上げを予定しており、枠が埋まり次第、新しい料金でのご案内となります。</p>
-      <a class="btn btn-secondary" href="#contact">まずは個別相談から</a>
+      <div class="card wide rv" id="plan">
+        <span class="tag" aria-hidden="true">伴走</span>
+        <span class="badge">先着5社限定・今後値上げ予定</span>
+        <h3>月額 伴走サポート</h3>
+        <div class="price"><strong>月額 100,000円</strong><span class="muted small">（税抜）</span></div>
+        <ul class="list muted small">
+          <li><strong>週1回のミーティング</strong>：企画・サムネ・数字の振り返りを一緒に進めます</li>
+          <li><strong>Discordでいつでも質問</strong>：やりながら出てきた「分からない」を、その都度聞けます</li>
+        </ul>
+        <p class="muted small">個別相談で決めた方向性をもとに進めます。期間などの詳細は、個別相談のあとにご相談のうえ決めます。</p>
+        <p class="small" style="font-weight:900">この価格は先着5社までです。月額料金は今後値上げを予定しており、枠が埋まり次第、新しい料金でのご案内となります。</p>
+        <a class="btn btn-ghost" href="#contact">まずは個別相談から</a>
+      </div>
     </div>
   </div>
+  <div class="wave b" style="color:var(--sky-soft)"><svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0 0h1440v26c-220 36-420 30-640 6S420 4 220 30 60 48 0 36z" fill="currentColor"/></svg></div>
 </section>
 
 <!-- 流れ -->
-<section class="sec">
+<section class="flow sec">
   <div class="wrap">
-    <p class="eyebrow">HOW IT WORKS</p>
-    <h2>相談までの流れ</h2>
+    <div class="center"><span class="label rv">HOW IT WORKS</span></div>
+    <h2 class="center scrub">相談までの流れ</h2>
     <ol class="steps">
-      <li><h3>フォームから申し込む</h3><p class="muted small" style="margin:0">お名前・連絡先・チャンネルURL（これからの方は予定ジャンル）と、今いちばん困っていることをご記入ください。1〜2分で終わります。</p></li>
-      <li><h3>日程を調整する</h3><p class="muted small" style="margin:0">2営業日以内にメールでご連絡します。候補日からお選びください。</p></li>
-      <li><h3>30分の個別相談（Zoom・対面）</h3><p class="muted small" style="margin:0">事前にチャンネルとジャンルの競合を確認しておくので、当日の30分は道筋と改善案のお話に集中できます。</p></li>
-      <li><h3>次の一手を決める</h3><p class="muted small" style="margin:0">ご自身で進めるか、継続サポートを使うかは、ここで判断いただければ大丈夫です。</p></li>
+      <li class="pop"><h3>フォームから申し込む</h3><p class="muted small">お名前・連絡先・チャンネルURL（これからの方は予定ジャンル）と、今いちばん困っていることをご記入ください。1〜2分で終わります。</p></li>
+      <li class="pop" style="transition-delay:.1s"><h3>日程を調整する</h3><p class="muted small">2営業日以内にメールでご連絡します。候補日からお選びください。</p></li>
+      <li class="pop" style="transition-delay:.2s"><h3>30分の個別相談（Zoom・対面）</h3><p class="muted small">事前にチャンネルとジャンルの競合を確認しておくので、当日の30分は道筋と改善案のお話に集中できます。</p></li>
+      <li class="pop" style="transition-delay:.3s"><h3>次の一手を決める</h3><p class="muted small">ご自身で進めるか、継続サポートを使うかは、ここで判断いただければ大丈夫です。</p></li>
     </ol>
   </div>
 </section>
 
 <!-- FAQ -->
-<section class="sec alt" id="faq">
-  <div class="wrap">
-    <p class="eyebrow">FAQ</p>
-    <h2>よくあるご質問</h2>
-    <details><summary>料金はいくらですか。初回無料ですか。</summary><p>個別相談は30分・通常30,000円（税込）です。セミナー受講者の方は特別価格15,000円（税込）でお受けします。無料相談は行っておりません。</p></details>
-    <details><summary>特別価格はいつまで適用されますか。</summary><p>セミナー受講者の方限定の価格で、お申し込み期限はセミナーから5日後の2026年10月10日（土）までです。期限後は通常価格（30,000円）となります。</p></details>
-    <details><summary>継続してサポートしてもらうことはできますか。</summary><p>できます。週1回のミーティングと、Discordでいつでも質問できる月額の伴走サポートを、先着5社まで月額100,000円（税抜）でお受けしています（今後値上げ予定）。いきなり契約いただく必要はありません。まず個別相談で方向性を整理し、そのうえで必要かどうかをご判断ください。</p></details>
-    <details><summary>まだチャンネルを持っていなくても相談できますか。</summary><p>できます。これから始める方は、予定しているジャンルの相場と空いている場所を一緒に確認するところから始めます。</p></details>
-    <details><summary>顔出しをしていなくても大丈夫ですか。</summary><p>大丈夫です。顔を出さずに収益化した経験をもとに、顔出しなしでの設計もご提案できます。</p></details>
-    <details><summary>会社・お店のチャンネルでも相談できますか。</summary><p>はい。集客や商品販売が目的の場合、再生数が少なくても濃いお客さんに届けば売上は立ちます。目的に合わせた戦い方を整理します。</p></details>
-    <details><summary>オンラインと対面、どちらで相談できますか。</summary><p>どちらでも可能です。オンラインはZoomで行います。フォームでご希望をお選びください。</p></details>
-    <details><summary>相談の前に準備するものはありますか。</summary><p>チャンネルURL（または予定ジャンル）だけで結構です。YouTubeアナリティクスの画面を共有いただけると、より具体的にお話しできます。</p></details>
+<section class="faq sec" id="faq">
+  <div class="wrap" style="max-width:860px">
+    <div class="center"><span class="label rv">FAQ</span></div>
+    <h2 class="center scrub">よくあるご質問</h2>
+    <details class="rv"><summary>料金はいくらですか。初回無料ですか。</summary><p>個別相談は30分・通常30,000円（税込）です。セミナー受講者の方は特別価格15,000円（税込）でお受けします。無料相談は行っておりません。</p></details>
+    <details class="rv"><summary>特別価格はいつまで適用されますか。</summary><p>セミナー受講者の方限定の価格で、お申し込み期限はセミナーから5日後の2026年10月10日（土）までです。期限後は通常価格（30,000円）となります。</p></details>
+    <details class="rv"><summary>継続してサポートしてもらうことはできますか。</summary><p>できます。週1回のミーティングと、Discordでいつでも質問できる月額の伴走サポートを、先着5社まで月額100,000円（税抜）でお受けしています（今後値上げ予定）。いきなり契約いただく必要はありません。まず個別相談で方向性を整理し、そのうえで必要かどうかをご判断ください。</p></details>
+    <details class="rv"><summary>まだチャンネルを持っていなくても相談できますか。</summary><p>できます。これから始める方は、予定しているジャンルの相場と空いている場所を一緒に確認するところから始めます。</p></details>
+    <details class="rv"><summary>顔出しをしていなくても大丈夫ですか。</summary><p>大丈夫です。顔を出さずに収益化した経験をもとに、顔出しなしでの設計もご提案できます。</p></details>
+    <details class="rv"><summary>会社・お店のチャンネルでも相談できますか。</summary><p>はい。集客や商品販売が目的の場合、再生数が少なくても濃いお客さんに届けば売上は立ちます。目的に合わせた戦い方を整理します。</p></details>
+    <details class="rv"><summary>オンラインと対面、どちらで相談できますか。</summary><p>どちらでも可能です。オンラインはZoomで行います。フォームでご希望をお選びください。</p></details>
+    <details class="rv"><summary>相談の前に準備するものはありますか。</summary><p>チャンネルURL（または予定ジャンル）だけで結構です。YouTubeアナリティクスの画面を共有いただけると、より具体的にお話しできます。</p></details>
   </div>
 </section>
 
-
-<!-- CTA -->
-<section class="sec" id="line">
+<!-- LINE -->
+<section class="linesec sec" id="line" style="padding-top:0">
   <div class="wrap">
-    <p class="eyebrow">LINE</p>
-    <h2>次回セミナーのご招待は、LINEでお届けします。</h2>
-    <div class="line-box">
+    <div class="linebox rv">
       <img src="line_qr.png" alt="LINE友だち追加のQRコード（@031svhsj）">
-      <div>
+      <div style="flex:1;min-width:240px">
+        <h2>次回セミナーの<br class="sp">ご招待は、<br>LINEでお届けします。</h2>
         <p class="muted">セミナーは月1回〜2か月に1回のペースで開催予定です。LINEに登録いただいた方に、次回のご招待を優先してお送りします。週1回、YouTubeのワンポイントもお届けします。</p>
         <a class="btn btn-line" href="https://line.me/R/ti/p/@031svhsj" target="_blank" rel="noopener">LINEで友だち追加する</a>
-        <p class="muted small" style="margin-top:var(--sp4)">LINE ID：@031svhsj</p>
+        <p class="muted small" style="margin:16px 0 0">LINE ID：@031svhsj</p>
       </div>
     </div>
   </div>
 </section>
 
-<section class="navy sec" id="contact">
+<!-- CTA -->
+<section class="contact sec" id="contact">
+  <div class="wave t" style="color:var(--sky-soft)"><svg viewBox="0 0 1440 60" preserveAspectRatio="none"><path d="M0 60h1440V24c-160 30-340 34-560 6S520 8 320 30 80 44 0 26z" fill="currentColor"/></svg></div>
   <div class="wrap">
-    <p class="eyebrow">CONTACT</p>
-    <h2>次の一手を、一緒に決めましょう。</h2>
-    <p class="muted">お申し込み・ご質問はフォームからお送りください。2営業日以内にご返信します。<br>特別価格15,000円のお申し込みは2026年10月10日（土）までです。</p>
-    <div class="btns">
-      <a class="btn btn-primary js-form" href="#contact" target="_blank" rel="noopener">申し込みフォームを開く</a>
+    <p class="lead rv">＼ 受講者限定の個別相談 ／</p>
+    <h2 class="scrub">次の一手を、<br class="sp">一緒に決めましょう。</h2>
+    <p class="rv">お申し込み・ご質問はフォームからお送りください。2営業日以内にご返信します。<br>特別価格15,000円のお申し込みは2026年10月10日（土）までです。</p>
+    <div class="btns rv" style="justify-content:center">
+      <a class="btn btn-primary pulse js-form" href="#contact" target="_blank" rel="noopener">
+        <svg class="ic" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/></svg>
+        申し込みフォームを開く
+      </a>
     </div>
-    <p class="muted small" style="margin-top:var(--sp4)">※ フォームはGoogleフォームで開きます。</p>
+    <p class="muted small" style="margin-top:16px">※ フォームはGoogleフォームで開きます。</p>
   </div>
 </section>
 
 <footer>
   <div class="wrap">
-    <p style="margin:0">Ykkn 山内｜YouTube・SNS運用コンサルティング</p>
-    <p style="margin:var(--sp2) 0 0"><a href="tokushoho.html">特定商取引法に基づく表記</a>　<a href="privacy.html">プライバシーポリシー</a></p>
-    <p style="margin:var(--sp4) 0 0">© 2026 Ykkn 山内</p>
+    <p style="margin:0;color:#fff;font-weight:900">Ykkn 山内｜YouTube・SNS運用コンサルティング</p>
+    <p style="margin:8px 0 0"><a href="tokushoho.html">特定商取引法に基づく表記</a>　<a href="privacy.html">プライバシーポリシー</a></p>
+    <p style="margin:16px 0 0">© 2026 Ykkn 山内</p>
   </div>
 </footer>
+
+<a class="buddy js-form" href="#contact" aria-label="個別相談を申し込む">
+  <span>相談する？</span>
+  <img src="ykkn_icon.png" alt="">
+</a>
 
 <div class="sticky">
   <a class="btn btn-line" href="https://line.me/R/ti/p/@031svhsj" target="_blank" rel="noopener">LINE登録</a>
@@ -356,9 +561,83 @@ if (FORM_URL) {
 }
 </script>
 <script>
-(function(){var d=document.documentElement;if(!('IntersectionObserver' in window))return;d.classList.add('js');
-var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('on');io.unobserve(e.target);}});},{threshold:.15});
-document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});})();
+(function(){
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var root = document.documentElement;
+  if (reduce || !('IntersectionObserver' in window)) return;
+  root.classList.add('js');
+
+  /* 1) 画面に入ったら表示（ふわっと／ポンッ） */
+  var io = new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if (!e.isIntersecting) return;
+      e.target.classList.add('on');
+      e.target.querySelectorAll('[data-count]').forEach(countUp);
+      io.unobserve(e.target);
+    });
+  }, {threshold:.18, rootMargin:'0px 0px -6% 0px'});
+  document.querySelectorAll('.rv,.pop,.solve').forEach(function(el){ io.observe(el); });
+
+  /* 2) 数字のカウントアップ */
+  function countUp(el){
+    var to = parseFloat(el.dataset.count), dec = +(el.dataset.dec||0), t0 = null, dur = 1400;
+    function step(t){ if(!t0) t0 = t; var p = Math.min(1,(t-t0)/dur), v = to*(1-Math.pow(1-p,3));
+      el.textContent = v.toFixed(dec); if (p<1) requestAnimationFrame(step); }
+    requestAnimationFrame(step);
+  }
+
+  /* 3) 見出し：スクロールに合わせて、ぼかしからくっきり */
+  var scrubs = [].slice.call(document.querySelectorAll('.scrub'));
+  function scrub(){
+    var vh = innerHeight;
+    scrubs.forEach(function(el){
+      var r = el.getBoundingClientRect();
+      var v = Math.max(0, Math.min(1, (vh*0.95 - r.top) / (vh*0.35)));
+      el.style.setProperty('--v', v.toFixed(3));
+    });
+  }
+
+  /* 4) 右下のキャラクター：ヒーローを過ぎたら登場 */
+  var buddy = document.querySelector('.buddy'), hero = document.querySelector('.hero');
+  function buddyCheck(){ buddy.classList.toggle('show', hero.getBoundingClientRect().bottom < 0); }
+
+  var ticking = false;
+  function onScroll(){ if (ticking) return; ticking = true;
+    requestAnimationFrame(function(){ scrub(); buddyCheck(); ticking = false; }); }
+  addEventListener('scroll', onScroll, {passive:true});
+  addEventListener('resize', onScroll);
+  scrub(); buddyCheck();
+
+  /* 5) なめらかスクロール（パソコンのマウスホイールのみ。スマホは標準のまま） */
+  var fine = matchMedia('(pointer:fine)').matches;
+  if (fine) {
+    var target = scrollY, cur = scrollY, running = false;
+    function max(){ return document.documentElement.scrollHeight - innerHeight; }
+    function loop(){
+      cur += (target - cur) * 0.12;
+      if (Math.abs(target - cur) < 0.5) { cur = target; running = false; }
+      scrollTo(0, cur);
+      if (running) requestAnimationFrame(loop);
+    }
+    function go(y){ target = Math.max(0, Math.min(max(), y)); if (!running){ cur = scrollY; running = true; requestAnimationFrame(loop); } }
+    addEventListener('wheel', function(e){
+      if (e.ctrlKey || e.defaultPrevented) return;
+      var el = e.target; while (el && el !== document.body){ var s = getComputedStyle(el).overflowY;
+        if ((s === 'auto' || s === 'scroll') && el.scrollHeight > el.clientHeight) return; el = el.parentElement; }
+      e.preventDefault();
+      if (!running) target = scrollY;
+      go(target + (e.deltaMode === 1 ? e.deltaY*40 : e.deltaY));
+    }, {passive:false});
+    addEventListener('scroll', function(){ if (!running) { target = scrollY; cur = scrollY; } }, {passive:true});
+    document.querySelectorAll('a[href^="#"]').forEach(function(a){
+      a.addEventListener('click', function(e){
+        var id = a.getAttribute('href'); if (id.length < 2 || a.target === '_blank') return;
+        var t = document.querySelector(id); if (!t) return;
+        e.preventDefault(); go(t.getBoundingClientRect().top + scrollY - 72);
+      });
+    });
+  }
+})();
 </script>
 </body>
 </html>
