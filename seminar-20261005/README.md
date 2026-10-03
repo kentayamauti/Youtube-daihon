@@ -10,7 +10,7 @@
 | `script/セミナー台本_v9_original.pdf` | 元の台本（v9） | 保管用 |
 | `slides/YouTubeセミナー_v27.pptx` / `.pdf` | スライド（43枚。S12の参考動画にQR、S32に「会社なら成約の利益から逆算」、S39に「会社で決める3つ」、S2の登録者数・再生回数に「現在進行形」、体験ワークは2問（S23〜S24 外構、S25〜S26 年金、タイトル途中まで表示・QR付き）、S42に月額サポートの一行を追加、S42にLINEのQRも追加、ワーク第1問（S23・S24、QR付き）、S13実例チャンネル画面、S31実際の4本、S32「月10万円から逆算」、S35「好きなことで、生きていく」、S42に特典QR） | ✅ |
 | `slides/YouTubeセミナー_v6_original.pptx` | 元のスライド（v6） | 保管用 |
-| `handout/セミナーメモ用紙_A4両面.pdf` | 受講者用メモ用紙（A4両面1枚。①〜⑨の目次と書き込み用の罫線だけ。①自己紹介は1行）。元データは `handout/memo.html` | ✅ |
+| `handout/セミナーメモ用紙_A4両面.pdf` | 受講者用メモ用紙（A4両面1枚。①〜⑨の目次と書き込み用の罫線だけ。①自己紹介は1行。裏面の下に「個別相談はこちら」のQR）。元データは `handout/memo.html` | ✅ |
 | `lp/index.html` | LP本体（https://ykkn-youtube.com で公開中） | ✅ |
 | `lp/tokushoho.html` / `lp/privacy.html` | 特商法表記・プライバシーポリシー | ✅ |
 | `form/create_form.gs` | Googleフォームを自動作成するスクリプト | ✅ 実行済み |
