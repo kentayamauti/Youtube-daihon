@@ -7,7 +7,7 @@
  ├─ YouTubeコンサル・セミナー事業部 …… このリポジトリ（kentayamauti/Youtube-daihon）
  ├─ YouTubeチャンネル運営事業部 …… 別リポジトリ（youtube-channel-company）
  ├─ 倒産ニュース×デイトレ配信 事業部 …… 別リポジトリ（新規・作成中）
- └─ TikTok運営 事業部 …… 別リポジトリ（新規・作成中）
+ └─ TikTok運営 事業部 …… 別リポジトリ（kentayamauti/Tiktokteam）
 ```
 
 ## このリポジトリの中身
