@@ -18,12 +18,15 @@ from PIL import Image, ImageDraw, ImageFont, ImageOps
 W, H = 1280, 720
 HERE = Path(__file__).resolve().parent
 
-# 太いフォントを fonts/ に置けばそれを優先（例: NotoSansJP-Black.ttf）
-FONT_CANDIDATES = sorted((HERE / "fonts").glob("*.[ot]t[fc]")) + [
-    Path("/usr/share/fonts/opentype/ipafont-gothic/ipag.ttf"),
-    Path("/usr/share/fonts/truetype/fonts-japanese-gothic.ttf"),
-    Path("/usr/share/fonts/truetype/wqy/wqy-zenhei.ttc"),
-]
+# 型ごとのフォント（参考サムネに合わせる）
+#   上下 → 極太ゴシック（Noto Sans JP Black）
+#   縦書き → 極太明朝（Noto Serif JP Black）
+FONTS = {
+    "jouge": HERE / "fonts" / "NotoSansJP-Black.ttf",
+    "tate": HERE / "fonts" / "NotoSerifJP-Black.ttf",
+}
+# 型ごとの黒フチの太さ（文字サイズ比）。縦書きの参考はフチがかなり太い
+OUTLINE = {"jouge": 0.14, "tate": 0.18}
 
 # 縦書きで90度回すもの
 ROTATE = set("ー－-〜~…‥―（）()「」『』【】＝=")
@@ -32,13 +35,11 @@ SMALL = set("っゃゅょぁぃぅぇぉゎッャュョァィゥェォヮヵヶ"
 PUNCT = set("、。，．,.")
 
 
-def pick_font(path):
-    if path:
-        return Path(path)
-    for p in FONT_CANDIDATES:
-        if p.exists():
-            return p
-    raise SystemExit("日本語フォントが見つかりません。fonts/ に .ttf/.otf を置いてください。")
+def pick_font(path, mode):
+    p = Path(path) if path else FONTS[mode]
+    if not p.exists():
+        raise SystemExit(f"フォントが見つかりません: {p}")
+    return p
 
 
 class Style:
@@ -176,11 +177,11 @@ def main():
     def common(sp):
         sp.add_argument("image", help="元の写真")
         sp.add_argument("-o", "--out", required=True, help="出力ファイル（.jpg / .png）")
-        sp.add_argument("--font", help="使うフォント（省略時は fonts/ → IPAゴシック）")
+        sp.add_argument("--font", help="使うフォント（省略時は型ごとの既定。上下=ゴシック、縦書き=明朝）")
         sp.add_argument("--fill", default="#FFFFFF", help="文字の色")
         sp.add_argument("--outline", default="#000000", help="フチの色")
-        sp.add_argument("--outline-ratio", type=float, default=0.14, help="フチの太さ（文字サイズ比）")
-        sp.add_argument("--bold", type=float, default=0.035, help="文字を太らせる量（太いフォントなら0）")
+        sp.add_argument("--outline-ratio", type=float, help="フチの太さ（文字サイズ比。既定 上下0.14／縦書き0.18）")
+        sp.add_argument("--bold", type=float, default=0.0, help="文字をさらに太らせる量（細いフォントを使うとき 0.03 くらい）")
 
     a = sub.add_parser("jouge", help="上下に横書き")
     common(a)
@@ -196,7 +197,8 @@ def main():
     b.add_argument("--center", action="store_true", help="短い列を上下中央に寄せる（既定は上詰め）")
 
     args = p.parse_args()
-    style = Style(pick_font(args.font), args.fill, args.outline, args.outline_ratio, args.bold)
+    outline_ratio = args.outline_ratio if args.outline_ratio is not None else OUTLINE[args.mode]
+    style = Style(pick_font(args.font, args.mode), args.fill, args.outline, outline_ratio, args.bold)
     img = jouge(args, style) if args.mode == "jouge" else tate(args, style)
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
