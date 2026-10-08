@@ -1,0 +1,14 @@
+{
+  "size": {"width": 2500, "height": 1686},
+  "selected": true,
+  "name": "メニュー v2（2026-10-08）",
+  "chatBarText": "メニュー",
+  "areas": [
+    {"bounds": {"x": 0,    "y": 0,   "width": 833, "height": 843}, "action": {"type": "uri", "label": "お問い合わせ", "uri": "https://ykkn-youtube.com/#contact"}},
+    {"bounds": {"x": 833,  "y": 0,   "width": 834, "height": 843}, "action": {"type": "uri", "label": "サービス・料金", "uri": "https://ykkn-youtube.com/#support"}},
+    {"bounds": {"x": 1667, "y": 0,   "width": 833, "height": 843}, "action": {"type": "uri", "label": "友だちに紹介", "uri": "https://ykkn-youtube.com/line.html"}},
+    {"bounds": {"x": 0,    "y": 843, "width": 833, "height": 843}, "action": {"type": "message", "label": "人生相談", "text": "人生相談したい"}},
+    {"bounds": {"x": 833,  "y": 843, "width": 834, "height": 843}, "action": {"type": "uri", "label": "実績", "uri": "https://ykkn-youtube.com/#results"}},
+    {"bounds": {"x": 1667, "y": 843, "width": 833, "height": 843}, "action": {"type": "uri", "label": "ご紹介歓迎", "uri": "https://ykkn-youtube.com/line.html"}}
+  ]
+}
