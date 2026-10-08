@@ -1,9 +1,9 @@
 ---
-name: thumbnail
-description: サムネイル作成部屋。写真に文字を入れてYouTubeサムネイル（1280x720）をつくる。型は「上下に横書き（jouge）」と「右と左に縦書き（tate）」の2つで、その都度オーナー（山内）と決める。「サムネつくって」「サムネに文字入れて」と写真を渡されたとき、または /thumbnail のときに使う。
+name: okan-thumbnail
+description: おかんサムネイル（サムネイル作成部屋）。写真に文字を入れてYouTubeサムネイル（1280x720）をつくる。型は「上下に横書き（jouge）」と「右と左に縦書き（tate）」の2つで、その都度オーナー（山内）と決める。「サムネつくって」「サムネに文字入れて」と写真を渡されたとき、「おかんサムネ」と言われたとき、または /okan-thumbnail のときに使う。
 ---
 
-# サムネイル作成部屋
+# おかんサムネイル
 
 写真に **白文字＋太い黒フチ** の文字を足して、1280x720 のサムネイルをつくる。
 
@@ -23,7 +23,7 @@ description: サムネイル作成部屋。写真に文字を入れてYouTubeサ
 3. スクリプトで作る：
 
 ```bash
-S=.claude/skills/thumbnail/make_thumbnail.py
+S=.claude/skills/okan-thumbnail/make_thumbnail.py
 
 # 上下
 python3 $S jouge 写真.jpg --top "牛丼屋はもういかない" --bottom "この作り方覚えて" -o out/thumb.jpg
@@ -50,7 +50,7 @@ python3 $S tate 写真.jpg --right "パックの" --right "まま焼け" \
 - 上下（`jouge`）：Noto Sans JP Black（極太ゴシック）
 - 縦書き（`tate`）：Noto Serif JP Black（極太明朝）
 
-上下を明朝にしたいなど、入れ替えたいときは `--font .claude/skills/thumbnail/fonts/NotoSerifJP-Black.ttf` のように指定する。
+上下を明朝にしたいなど、入れ替えたいときは `--font .claude/skills/okan-thumbnail/fonts/NotoSerifJP-Black.ttf` のように指定する。
 
 ## 注意
 
