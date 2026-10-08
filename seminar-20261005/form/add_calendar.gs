@@ -5,6 +5,7 @@
  *  - 申し込みフォームに「第1〜第3希望の日時」の質問を追加する（「ご希望の相談時間帯」の質問は外す）
  *  - 申し込みが来たら、3つの候補をカレンダーに【仮】の予定（黄色）として入れる
  *  - その時間にほかの予定が入っているかを調べて、メールで知らせる（○空いている／✕予定あり）
+ *  - フォームのタイトル・説明文・「お問い合わせの種類」を新しい料金（2026-10-08決定）に書き換える
  *  - Ykkn 山内が1つ選んでお客さんに連絡したら、カレンダーで残り2つを消し、選んだ予定の【仮】を外す
  *
  * 使い方（初回だけ・5分）:
@@ -23,12 +24,34 @@ const CAL_CONFIG = {
   notifyEmail: '', // 空なら、スクリプトを実行した人のアドレス
 };
 
+const FORM_TEXT = {
+  title: '個別相談 お申し込みフォーム',
+  description:
+    'YouTube・SNS運用の個別相談のお申し込みフォームです（Ykkn 山内）。\n' +
+    '・初心者向け相談（まだYouTubeを始めていない方）：30分 10,000円（税込11,000円）\n' +
+    '・上級者向け相談（YouTubeを運営している方）：30分 30,000円（税込33,000円）\n' +
+    '・延長：15分ごとに3,000円（税込3,300円）\n' +
+    '・月額コンサル：月額150,000円（税込165,000円）\n' +
+    'セミナー受講者の方は、2026年10月10日（土）までのお申し込みで、相談は半額（5,000円／15,000円）、月額コンサルは月額100,000円です（いずれも税抜）。\n' +
+    'ご希望の日時を3つお選びください。2営業日以内に、ご入力いただいたメールアドレスへ日程のご連絡をいたします。',
+  menuChoices: [
+    '初心者向け相談を申し込む（まだYouTubeを始めていない）',
+    '上級者向け相談を申し込む（YouTubeを運営している）',
+    '月額コンサルについて相談したい',
+    '申し込む前に質問したい',
+  ],
+};
+
 const CANDIDATE_TITLES = ['ご希望の日時（第1希望）', 'ご希望の日時（第2希望）', 'ご希望の日時（第3希望）'];
 const OLD_TIME_ITEM_TITLE = 'ご希望の相談時間帯（複数選択可）';
 
 function setupCalendarBooking() {
   if (!CAL_CONFIG.FORM_EDIT_URL) throw new Error('FORM_EDIT_URL にフォームの編集用URLを貼ってください');
   const form = FormApp.openByUrl(CAL_CONFIG.FORM_EDIT_URL);
+  form.setTitle(FORM_TEXT.title).setDescription(FORM_TEXT.description);
+  const menuItem = form.getItems().find(i => i.getTitle() === 'お問い合わせの種類');
+  if (menuItem) menuItem.asMultipleChoiceItem().setChoiceValues(FORM_TEXT.menuChoices);
+
   const items = form.getItems();
 
   if (!items.some(i => i.getTitle() === CANDIDATE_TITLES[0])) {
