@@ -58,15 +58,17 @@ class Style:
         out = max(2, round(size * self.outline_ratio))
         return bold, bold + out
 
-    def draw(self, img, xy, text, size, anchor="la"):
-        """黒フチ → 白文字（太らせ込み）の順に重ねる。"""
+    def draw(self, img, xy, text, size, anchor="la", part="both"):
+        """黒フチ → 白文字（太らせ込み）の順に重ねる。part で片方だけも描ける。"""
         d = ImageDraw.Draw(img)
         f = self.font(size)
         bold, total = self.widths(size)
-        d.text(xy, text, font=f, fill=self.outline, stroke_width=total,
-               stroke_fill=self.outline, anchor=anchor)
-        d.text(xy, text, font=f, fill=self.fill, stroke_width=bold,
-               stroke_fill=self.fill, anchor=anchor)
+        if part in ("both", "outline"):
+            d.text(xy, text, font=f, fill=self.outline, stroke_width=total,
+                   stroke_fill=self.outline, anchor=anchor)
+        if part in ("both", "fill"):
+            d.text(xy, text, font=f, fill=self.fill, stroke_width=bold,
+                   stroke_fill=self.fill, anchor=anchor)
 
 
 def load_bg(path):
@@ -75,99 +77,131 @@ def load_bg(path):
     return ImageOps.fit(img, (W, H), Image.LANCZOS)
 
 
+# ---------- 共通：大きく描いて切り抜き、枠いっぱいに縮める ----------
+
+BASE = 240        # 下描きの文字サイズ（大きく描いてから縮めるときれい）
+MARGIN = 6        # 画面の端からのすき間（px）
+MAX_STRETCH = 1.3 # 枠を埋めるために片方向へ伸ばしてよい倍率
+
+
+def crop_alpha(layer):
+    return layer.crop(layer.getchannel("A").getbbox())
+
+
+def fit_into(layer, box_w, box_h, stretch="x"):
+    """縦横比を保って枠いっぱいに縮め、足りない方向は MAX_STRETCH まで伸ばす。"""
+    k = min(box_w / layer.width, box_h / layer.height)
+    w, h = layer.width * k, layer.height * k
+    if stretch == "x":
+        w = min(box_w, w * MAX_STRETCH)
+    elif stretch == "y":
+        h = min(box_h, h * MAX_STRETCH)
+    return layer.resize((max(1, round(w)), max(1, round(h))), Image.LANCZOS)
+
+
 # ---------- 上下（横書き） ----------
 
-def fit_horizontal(style, text, max_w, max_h):
-    size = max_h
-    while size > 10:
-        _, total = style.widths(size)
-        l, t, r, b = style.font(size).getbbox(text, stroke_width=total)
-        if r - l <= max_w and b - t <= max_h:
-            return size
-        size -= 2
-    return size
+def render_line(style, text):
+    f = style.font(BASE)
+    _, total = style.widths(BASE)
+    l, t, r, b = f.getbbox(text, stroke_width=total)
+    layer = Image.new("RGBA", (r - l + 20, b - t + 20), (0, 0, 0, 0))
+    style.draw(layer, (10 - l, 10 - t), text, BASE)
+    return crop_alpha(layer)
 
 
 def jouge(args, style):
-    img = load_bg(args.image)
-    margin = int(W * 0.02)
-    band_h = int(H * args.band)  # 1行ぶんの高さ
-    for text, cy in ((args.top, margin + band_h / 2), (args.bottom, H - margin - band_h / 2)):
+    img = load_bg(args.image).convert("RGBA")
+    box_w = W - MARGIN * 2
+    box_h = int(H * args.band)
+    for text, where in ((args.top, "top"), (args.bottom, "bottom")):
         if not text:
             continue
-        size = fit_horizontal(style, text, W - margin * 2, band_h)
-        style.draw(img, (W / 2, cy), text, size, anchor="mm")
-    return img
+        line = fit_into(render_line(style, text), box_w, box_h, stretch="x")
+        x = (W - line.width) // 2
+        y = MARGIN if where == "top" else H - MARGIN - line.height
+        img.alpha_composite(line, (x, y))
+    return img.convert("RGB")
 
 
 # ---------- 左右（縦書き） ----------
 
-def column_metrics(style, text, size):
-    """1列の縦書きで、1文字あたりの送り幅（=size）と列幅を返す。"""
+def render_column(style, text, gap=0.0):
+    """縦書き1列を描く。gap は文字と文字の間に足すすき間（下描きのpx）。"""
+    size = BASE
     _, total = style.widths(size)
-    return size + total * 0.6, size + total * 2
+    step = size + total * 0.6 + gap
+    cell = int(size + total * 2 + 20)
+    height = int(step * len(text) + total * 2 + 20)
+    layer = Image.new("RGBA", (cell, height), (0, 0, 0, 0))
+    # フチを全部描いてから白を全部描く（隣の字のフチが白に被らないように）
+    for part in ("outline", "fill"):
+        for i, ch in enumerate(text):
+            cx, cy = cell / 2, total + 10 + step * i + step / 2
+            if ch in ROTATE:
+                tile = Image.new("RGBA", (cell, cell), (0, 0, 0, 0))
+                style.draw(tile, (cell / 2, cell / 2), ch, size, anchor="mm", part=part)
+                tile = tile.rotate(-90, resample=Image.BICUBIC)
+                layer.alpha_composite(tile, (0, int(cy - cell / 2)))
+                continue
+            dx = dy = 0
+            if ch in SMALL:
+                dx, dy = size * 0.10, -size * 0.10
+            elif ch in PUNCT:
+                dx, dy = size * 0.55, -size * 0.55
+            style.draw(layer, (cx + dx, cy + dy), ch, size, anchor="mm", part=part)
+    return crop_alpha(layer)
 
 
-def fit_vertical(style, text, max_h, max_w):
-    size = max_w
-    while size > 10:
-        step, col_w = column_metrics(style, text, size)
-        if step * len(text) <= max_h and col_w <= max_w:
-            return size
-        size -= 2
-    return size
-
-
-def draw_vertical(img, style, text, cx, top, size):
-    step, _ = column_metrics(style, text, size)
-    _, total = style.widths(size)
-    pad = total * 2
-    for i, ch in enumerate(text):
-        cy = top + step * i + step / 2
-        if ch in ROTATE:
-            tile = Image.new("RGBA", (int(size + pad * 2),) * 2, (0, 0, 0, 0))
-            style.draw(tile, (tile.width / 2, tile.height / 2), ch, size, anchor="mm")
-            tile = tile.rotate(-90, resample=Image.BICUBIC)
-            img.paste(tile, (int(cx - tile.width / 2), int(cy - tile.height / 2)), tile)
-            continue
-        dx = dy = 0
-        if ch in SMALL:
-            dx, dy = size * 0.10, -size * 0.10
-        elif ch in PUNCT:
-            dx, dy = size * 0.55, -size * 0.55
-        style.draw(img, (cx + dx, cy + dy), ch, size, anchor="mm")
+def fill_column(style, text, box_w, box_h):
+    """列を枠（box_w × box_h）いっぱいにする。幅で決まって高さが余るときは字間を広げる。"""
+    col = render_column(style, text)
+    k = min(box_w / col.width, box_h / col.height)
+    short = box_h / k - col.height
+    if short > 1 and len(text) > 1:
+        col = render_column(style, text, gap=short / (len(text) - 1))
+    return fit_into(col, box_w, box_h, stretch="x")
 
 
 def tate(args, style):
     img = load_bg(args.image).convert("RGBA")
-    margin = int(H * 0.025)
-    max_h = H - margin * 2
-    # 左右それぞれの使える幅（画面の何割か）
-    side_w = W * args.side
+    box_h = H - MARGIN * 2
+    side_w = W * args.side - MARGIN
 
     def place(cols, side):
         if not cols:
             return
-        n = len(cols)
-        slot = side_w / n
-        sizes = [fit_vertical(style, t, max_h, slot) for t in cols]
-        widths = [column_metrics(style, t, s)[1] for t, s in zip(cols, sizes)]
+        # 高さいっぱいに描いたときの列の幅を出し、片側の幅に収まるよう配分する
+        natural = []
+        for t in cols:
+            c = render_column(style, t)
+            natural.append(c.width * box_h / c.height)
+        k = side_w / sum(natural)
+        widths = [w * k for w in natural]
+        rendered = [fill_column(style, t, w, box_h) for t, w in zip(cols, widths)]
         # 列は右から左へ並べる（日本語の縦書きの読み順）
-        if side == "right":
-            x = W - margin
-        else:
-            x = margin + sum(widths)
-        for t, s, w in zip(cols, sizes, widths):
-            cx = x - w / 2
-            step, _ = column_metrics(style, t, s)
-            col_h = step * len(t)
-            top = margin + (max_h - col_h) / 2 if args.center else margin
-            draw_vertical(img, style, t, cx, top, s)
-            x -= w
+        x = W - MARGIN if side == "right" else MARGIN + sum(c.width for c in rendered)
+        for c in rendered:
+            x -= c.width
+            img.alpha_composite(c, (int(x), MARGIN + (box_h - c.height) // 2))
 
     place(args.right, "right")
     place(args.left, "left")
     return img.convert("RGB")
+
+
+def save_for_youtube(img, out):
+    """YouTubeのサムネ規格：1280x720・JPEG・2MB未満。"""
+    out = out.with_suffix(".jpg")
+    out.parent.mkdir(parents=True, exist_ok=True)
+    img = img.convert("RGB")
+    if img.size != (W, H):
+        img = img.resize((W, H), Image.LANCZOS)
+    for q in (95, 90, 85, 80, 75, 70):
+        img.save(out, "JPEG", quality=q, optimize=True)
+        if out.stat().st_size < 2 * 1024 * 1024:
+            break
+    return out
 
 
 def main():
@@ -176,7 +210,7 @@ def main():
 
     def common(sp):
         sp.add_argument("image", help="元の写真")
-        sp.add_argument("-o", "--out", required=True, help="出力ファイル（.jpg / .png）")
+        sp.add_argument("-o", "--out", required=True, help="出力ファイル（YouTube用に 1280x720 の .jpg・2MB未満で書き出す）")
         sp.add_argument("--font", help="使うフォント（省略時は型ごとの既定。上下=ゴシック、縦書き=明朝）")
         sp.add_argument("--fill", default="#FFFFFF", help="文字の色")
         sp.add_argument("--outline", default="#000000", help="フチの色")
@@ -187,24 +221,19 @@ def main():
     common(a)
     a.add_argument("--top", default="", help="上の文字")
     a.add_argument("--bottom", default="", help="下の文字")
-    a.add_argument("--band", type=float, default=0.22, help="1行の高さ（画面比）")
+    a.add_argument("--band", type=float, default=0.30, help="1行の高さの上限（画面比）")
 
     b = sub.add_parser("tate", help="右と左に縦書き")
     common(b)
     b.add_argument("--right", action="append", default=[], help="右の列（右から順に、複数回指定可）")
     b.add_argument("--left", action="append", default=[], help="左の列（右から順に、複数回指定可）")
-    b.add_argument("--side", type=float, default=0.27, help="片側で使う幅（画面比）")
-    b.add_argument("--center", action="store_true", help="短い列を上下中央に寄せる（既定は上詰め）")
+    b.add_argument("--side", type=float, default=0.30, help="片側で使う幅（画面比）")
 
     args = p.parse_args()
     outline_ratio = args.outline_ratio if args.outline_ratio is not None else OUTLINE[args.mode]
     style = Style(pick_font(args.font, args.mode), args.fill, args.outline, outline_ratio, args.bold)
     img = jouge(args, style) if args.mode == "jouge" else tate(args, style)
-    out = Path(args.out)
-    out.parent.mkdir(parents=True, exist_ok=True)
-    img.save(out, quality=95) if out.suffix.lower() in (".jpg", ".jpeg") else img.save(out)
-    print(out)
-
+    print(save_for_youtube(img, Path(args.out)))
 
 if __name__ == "__main__":
     main()
