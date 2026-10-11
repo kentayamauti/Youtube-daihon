@@ -6,138 +6,69 @@ from flask import Flask, request, jsonify, send_from_directory
 # CORS: クロスオリジンリクエストを許可
 from flask_cors import CORS
 
-# Google API クライアント (YouTube用)
-from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
 # Google AI (Gemini用)
-import google.generativeai as genai
+from google import genai
+from google.genai import types
 
 # Flaskアプリケーションを作成
 # static_folder='.' : index.html などの静的ファイルをこのファイルと同じ場所から探す設定
 app = Flask(__name__, static_folder='.', static_url_path='')
 CORS(app) # CORSを有効化
 
+# 使うGeminiのモデル（動画を見て文字起こしできるもの）
+GEMINI_MODEL = 'gemini-2.5-flash'
+
 # --- ユーティリティ関数 ---
 
 def get_video_id(youtube_url):
     """ YouTubeのURLから動画IDを抽出します """
-    # 様々な形式のURL (watch, youtu.be, embed) に対応
+    # 様々な形式のURL (watch, youtu.be, embed, shorts) に対応
     patterns = [
         r"watch\?v=([a-zA-Z0-9_-]+)",
         r"youtu\.be/([a-zA-Z0-9_-]+)",
-        r"/(embed|v)/([a-zA-Z0-9_-]+)"
+        r"/(?:embed|v|shorts)/([a-zA-Z0-9_-]+)"
     ]
     for pattern in patterns:
         match = re.search(pattern, youtube_url)
         if match:
-            # 抽出したIDを返す
-            return match.group(1) if "watch" in pattern or "youtu.be" in pattern else match.group(2)
+            return match.group(1)
     return None # 見つからなかった場合
 
-def get_transcript(youtube_api_key, video_id, lang='ja'):
-    """ YouTube Data API v3 を使って字幕データを取得します """
+def get_transcript_with_gemini(gemini_api_key, video_id):
+    """
+    Gemini に YouTube 動画を直接見てもらい、台本（話している内容）を書き起こしてもらいます。
+    YouTube Data API では他人の動画の字幕を取り出せないため、この方法にしています。
+    ※ 公開されている動画のみ対応（限定公開・非公開は不可）
+    """
     try:
-        # YouTube APIサービスに接続
-        youtube = build('youtube', 'v3', developerKey=youtube_api_key)
-        
-        # 字幕リストを取得
-        caption_list_request = youtube.captions().list(part='snippet', videoId=video_id)
-        caption_list_response = caption_list_request.execute()
-        
-        track_id = None
-        # 1. まず「日本語(ja)」の手動字幕を探す
-        for item in caption_list_response.get('items', []):
-            if item['snippet']['language'] == lang:
-                track_id = item['id']
-                print(f"Found manual transcript: {lang}")
-                break
-        
-        # 2. 手動字幕がなければ「自動生成(a.ja)」の字幕を探す
-        if not track_id:
-            auto_lang_code = 'a.' + lang
-            for item in caption_list_response.get('items', []):
-                if item['id'].startswith(auto_lang_code):
-                    track_id = item['id']
-                    print(f"Found auto-generated transcript: {auto_lang_code}")
-                    break
+        client = genai.Client(api_key=gemini_api_key)
+        video_url = f"https://www.youtube.com/watch?v={video_id}"
+        prompt = """
+この YouTube 動画で話している内容を、台本データとして書き起こしてください。
 
-        # どちらも見つからなかった場合
-        if not track_id:
-            return None, "指定された言語の字幕(手動または自動生成)が見つかりませんでした。"
-            
-        # 見つかった字幕(SRT形式)をダウンロード
-        subtitle_request = youtube.captions().download(id=track_id, tfmt='srt')
-        subtitle_data_srt = subtitle_request.execute()
-        return subtitle_data_srt, None # 字幕データとエラーなしを返す
-
-    except HttpError as e:
-        # APIキーが無効、クォータ超過などのエラーハンドリング
-        error_message = e.error_details[0]['message'] if e.error_details else str(e)
-        if e.resp.status == 403: return None, f"YouTube APIエラー(403): APIキーが無効か、クォータ上限の可能性があります。 ({error_message})"
-        if e.resp.status == 404: return None, f"YouTube APIエラー(404): 動画または字幕が見つかりません。 ({error_message})"
-        return None, f"YouTube APIエラー: {error_message}"
-    except Exception as e:
-        return None, f"予期せぬエラー (YouTube API): {str(e)}"
-
-def clean_srt(srt_text):
-    """ SRT形式のテキストから、タイムスタンプや行番号を除去し、テキスト本文だけを抽出します """
-    transcript_lines = []
-    lines = srt_text.split('\n')
-    for line in lines:
-        if line.isdigit(): continue # 行番号をスキップ
-        if '-->' in line: continue # タイムスタンプをスキップ
-        if not line.strip(): continue # 空行をスキップ
-        transcript_lines.append(line.strip())
-    
-    # 重複する行（字幕が複数行にまたがる場合など）を除去
-    unique_lines = []
-    last_line = ""
-    for line in transcript_lines:
-        if line != last_line: 
-            unique_lines.append(line)
-            last_line = line
-    return '\n'.join(unique_lines) # テキストを改行で連結して返す
-
-def analyze_with_gemini(gemini_api_key, transcript_text):
-    """ Gemini API を使って文字起こしを分析します """
-    try:
-        # Gemini APIキーを設定
-        genai.configure(api_key=gemini_api_key)
-        # モデルを定義 (Flashモデルを使用)
-        model = genai.GenerativeModel(
-            'gemini-2.5-flash-preview-09-2025',
-            # AIの役割（ペルソナ）を設定
-            system_instruction="あなたはプロの動画構成作家またはコンテンツアナリストです。提供された文字起こしテキストを分析し、その構成や流れ、作成者の意図を的確に見抜いてください。"
-        )
-        # AIへの指示（プロンプト）
-        prompt = f"""
-以下のYouTube動画の文字起こしテキストを分析してください。
-
-【文字起こしテキスト】
----
-{transcript_text}
----
-
-【分析項目】
-以下の3つの項目について、詳細かつ具体的に分析し、結果をまとめてください。
-
-1.  **台本構成:**
-    (例: 序論・本論・結論、起承転結、問題提起→具体例→解決策、結論ファースト→理由説明→具体例、など、動画全体の構成がどのようになっているか)
-
-2.  **話の流れ:**
-    (どのようなトピックが、どのような順序で展開されているか。時間軸や論理的な流れを簡潔に説明してください)
-
-3.  **運営者の台本構成作成意図:**
-    (なぜこの構成・流れにしたのか？ 視聴者に何を最も伝えたいのか、視聴者をどう誘導し、どのような感情や行動（例: チャンネル登録、商品の購入）を引き出そうとしていると考えられるか)
-
-分析結果は読みやすいHTML形式（見出し、リストなど）で出力してください。
+【ルール】
+- 話している言葉を、できるだけそのまま書き起こす（要約しない・言い換えない）
+- 「えー」「あのー」などのつなぎ言葉は省いてよい
+- 話の区切りごとに改行し、段落の頭に [分:秒] の目安時間をつける（例: [01:23]）
+- 話している人が複数いる場合は、行の頭に「話者A:」「話者B:」のように書く
+- テロップや画面の文字で大事なものは（テロップ: 〜）として入れる
+- 書き起こし以外の説明・前置き・まとめは書かない
 """
-        # Gemini APIを実行し、結果をHTML形式で受け取る
-        response = model.generate_content(
-            prompt,
-            generation_config={"response_mime_type": "text/html"}
+        response = client.models.generate_content(
+            model=GEMINI_MODEL,
+            contents=types.Content(parts=[
+                types.Part(file_data=types.FileData(file_uri=video_url)),
+                types.Part(text=prompt),
+            ]),
+            # 映像は低画質で読ませて、長い動画でも処理できるようにする
+            config=types.GenerateContentConfig(
+                media_resolution=types.MediaResolution.MEDIA_RESOLUTION_LOW,
+            ),
         )
-        return response.text, None # 分析結果とエラーなしを返す
+        transcript_text = (response.text or '').strip()
+        if not transcript_text:
+            return None, "Geminiから台本データが返ってきませんでした。動画が公開されているか確認してください。"
+        return transcript_text, None
     except Exception as e:
         return None, f"Gemini APIエラー: {str(e)}"
 
@@ -145,57 +76,52 @@ def analyze_with_gemini(gemini_api_key, transcript_text):
 
 @app.route('/')
 def index():
-    """ 
+    """
     ルートURL('/') にアクセスがあった場合 (例: https://myapp.vercel.app/)
-    index.html を返します 
+    index.html を返します
     """
     return send_from_directory('.', 'index.html')
 
+@app.route('/config')
+def config():
+    """ サーバー側にGemini APIキーが設定済みかどうかを画面に伝えます（キー自体は返しません） """
+    return jsonify({"has_server_key": bool(os.environ.get('GEMINI_API_KEY'))})
+
 @app.route('/analyze', methods=['POST'])
 def handle_analysis():
-    """ 
-    '/analyze' エンドポイント (例: https://myapp.vercel.app/analyze)
-    フロントエンドからの分析リクエストを処理します 
     """
-    print("Received analysis request...") # サーバーログ
-    data = request.json
+    '/analyze' エンドポイント (例: https://myapp.vercel.app/analyze)
+    動画URLを受け取り、Gemini経由で台本データを取得して返します
+    """
+    print("Received transcript request...") # サーバーログ
+    data = request.json or {}
     youtube_url = data.get('youtube_url')
-    youtube_api_key = data.get('youtube_api_key')
-    gemini_api_key = data.get('gemini_api_key')
+    # サーバーの環境変数 GEMINI_API_KEY を優先し、なければ画面で入力されたキーを使う
+    gemini_api_key = os.environ.get('GEMINI_API_KEY') or data.get('gemini_api_key')
 
     # 必須項目チェック
-    if not all([youtube_url, youtube_api_key, gemini_api_key]):
-        return jsonify({"error": "必須項目が不足しています。"}), 400
+    if not youtube_url:
+        return jsonify({"error": "YouTube動画のURLを入力してください。"}), 400
+    if not gemini_api_key:
+        return jsonify({"error": "Gemini APIキーが設定されていません。"}), 400
 
     # 1. URLから動画IDを抽出
     video_id = get_video_id(youtube_url)
     if not video_id:
         return jsonify({"error": "有効なYouTube動画URLではありません。"}), 400
 
-    # 2. YouTube APIで文字起こしを取得
-    print(f"Fetching transcript for video ID: {video_id}")
-    srt_data, error = get_transcript(youtube_api_key, video_id)
+    # 2. Geminiで台本データを取得
+    print(f"Fetching transcript with Gemini for video ID: {video_id}")
+    transcript_text, error = get_transcript_with_gemini(gemini_api_key, video_id)
     if error:
         print(f"Error fetching transcript: {error}")
         return jsonify({"error": error}), 500
 
-    # 3. 文字起こしを整形
-    transcript_text = clean_srt(srt_data)
-    if not transcript_text:
-        return jsonify({"error": "文字起こしデータからテキストを抽出できませんでした。"}), 500
-
-    # 4. Gemini APIで分析
-    print("Analyzing transcript with Gemini...")
-    analysis_html, error = analyze_with_gemini(gemini_api_key, transcript_text)
-    if error:
-        print(f"Error analyzing with Gemini: {error}")
-        return jsonify({"error": error}), 500
-
-    # 5. 正常な結果をフロントエンドに返す
-    print("Analysis successful. Sending response.")
+    # 3. 正常な結果をフロントエンドに返す
+    print("Transcript fetched. Sending response.")
     return jsonify({
-        "transcript": transcript_text, # ダウンロード用
-        "analysis_html": analysis_html  # 表示用
+        "video_id": video_id,
+        "transcript": transcript_text
     })
 
 # --- サーバーの実行 ---
@@ -205,4 +131,3 @@ def handle_analysis():
 if __name__ == '__main__':
     # 0.0.0.0 を指定すると、PCのローカルIPアドレス経由で携帯からテストできます
     app.run(host='0.0.0.0', port=5000, debug=True)
-
