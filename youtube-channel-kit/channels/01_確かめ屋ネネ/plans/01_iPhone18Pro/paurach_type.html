@@ -1,0 +1,47 @@
+<!doctype html><html><head><meta charset="utf-8">
+<!--
+  お手本（パウラちゃんねる）型のサムネ。1280×720。
+  差し替えるところ：
+    --bg   背景の写真（自分で撮った写真が一番安全）
+    --char キャラの画像（透過PNG。顔が大きく、胸から上）
+    .band  黄色帯の文字（7文字前後で1行。2行にするときは .band.two）
+    .label 右下の小見出し（4〜5文字）
+  使い方：URLのうしろに ?band=文字&label=文字&bg=画像&char=画像 を付けて開く
+-->
+<style>
+@font-face{font-family:"NotoBlack";src:url("../../../../assets/fonts/NotoSansJP-Black.ttf")}
+html{height:720px}
+body{position:relative;margin:0;width:1280px;height:720px;overflow:hidden;background:#222;font-family:"NotoBlack",sans-serif}
+.bg{position:absolute;left:0;top:0;width:1280px;height:500px;background-size:cover;background-position:center}
+.lines{position:absolute;left:0;top:0;width:1280px;height:500px}
+.char{position:absolute;left:-30px;top:-10px;height:600px}
+.band{position:absolute;left:0;top:490px;width:1280px;height:230px;background:#FFF500;display:flex;align-items:center;justify-content:center;
+  font-size:188px;line-height:1;color:#9B00FF;letter-spacing:-6px;white-space:nowrap;
+  text-shadow:0 0 0 #9B00FF;-webkit-text-stroke:4px #fff;paint-order:stroke fill}
+.band.two{flex-direction:column;font-size:104px;letter-spacing:-3px}
+.band .sub{color:#111}
+.label{position:absolute;right:16px;top:368px;background:#9B00FF;border:6px solid #111;padding:2px 14px 8px;
+  font-size:66px;color:#E8FF3A;-webkit-text-stroke:6px #111;paint-order:stroke fill;line-height:1.1}
+</style></head><body>
+<div class="bg" id="bg"></div>
+<svg class="lines" viewBox="0 0 1280 500" id="lines"></svg>
+<img class="char" id="char">
+<div class="label" id="label"></div>
+<div class="band" id="band"></div>
+<script>
+const q=new URLSearchParams(location.search);
+document.getElementById('bg').style.backgroundImage=`url(${q.get('bg')||'bg_placeholder.svg'})`;
+const c=document.getElementById('char'); if(q.get('char')) c.src=q.get('char'); else c.remove();
+document.getElementById('label').textContent=q.get('label')||'小見出し';
+const b=document.getElementById('band'), t=(q.get('band')||'帯の文字は七文字').split('|');
+if(t.length>1){b.classList.add('two'); b.innerHTML=`<span class="sub">${t[0]}</span><span>${t[1]}</span>`} else b.innerHTML=`<span>${t[0]}</span>`;
+// 帯の文字が横幅に収まるまで小さくする
+document.fonts.ready.then(()=>{for(const el of b.children){let fs=parseFloat(getComputedStyle(el).fontSize);
+  while(el.getBoundingClientRect().width>1240&&fs>40){fs-=4;el.style.fontSize=fs+'px'}}});
+// 集中線（中心から外へ、黒いくさび）
+const s=document.getElementById('lines'), cx=760, cy=250; let h='';
+for(let i=0;i<46;i++){const a=i/46*Math.PI*2+(i%3)*0.02, w=0.012+((i*37)%7)/700, r1=230+((i*53)%90), r2=1100;
+ const p=(r,da)=>`${cx+Math.cos(a+da)*r},${cy+Math.sin(a+da)*r}`;
+ h+=`<polygon points="${p(r1,0)} ${p(r2,-w)} ${p(r2,w)}" fill="#000" opacity=".9"/>`}
+s.innerHTML=h;
+</script></body></html>

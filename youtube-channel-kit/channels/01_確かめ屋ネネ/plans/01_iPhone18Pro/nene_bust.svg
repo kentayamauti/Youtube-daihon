@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="520" height="660" viewBox="30 20 260 330" role="img" aria-label="ネネの立ち絵案:オレンジの髪、青いパーカー、虫眼鏡の髪飾りの女の子">
+        <path d="M58 170 Q46 52 150 46 Q254 52 242 170 L254 340 Q200 360 150 352 Q100 360 46 340 Z" fill="#F07A3C"/>
+        <rect x="134" y="250" width="32" height="40" fill="#F6D2BA"/>
+        <path d="M78 300 Q150 268 222 300 L248 540 Q150 560 52 540 Z" fill="#2E6FD8"/>
+        <path d="M112 292 Q150 330 188 292" fill="none" stroke="#1E4FA8" stroke-width="6" stroke-linecap="round"/>
+        <line x1="136" y1="312" x2="132" y2="360" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+        <line x1="164" y1="312" x2="168" y2="360" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+        <rect x="102" y="440" width="96" height="56" rx="18" fill="#1E4FA8"/>
+        <circle cx="196" cy="370" r="22" fill="#FFC92E" stroke="#1B1B1F" stroke-width="3"/>
+        <text x="196" y="379" text-anchor="middle" font-family="Dela Gothic One, sans-serif" font-size="22" fill="#1B1B1F">!?</text>
+        <path d="M80 304 Q56 380 60 470" fill="none" stroke="#2E6FD8" stroke-width="30" stroke-linecap="round"/>
+        <path d="M220 304 Q244 380 240 470" fill="none" stroke="#2E6FD8" stroke-width="30" stroke-linecap="round"/>
+        <circle cx="60" cy="478" r="17" fill="#FFE3CF"/>
+        <circle cx="240" cy="478" r="17" fill="#FFE3CF"/>
+        <ellipse cx="150" cy="172" rx="92" ry="88" fill="#FFE3CF"/>
+        <path d="M56 164 Q58 66 150 64 Q242 66 244 164 Q216 118 190 130 Q174 100 150 124 Q126 98 110 130 Q84 114 56 164 Z" fill="#F07A3C"/>
+        <path d="M58 160 Q48 230 70 270 Q76 220 78 176 Z" fill="#F07A3C"/>
+        <path d="M242 160 Q252 230 230 270 Q224 220 222 176 Z" fill="#F07A3C"/>
+        <path d="M150 64 Q140 28 172 22" fill="none" stroke="#F07A3C" stroke-width="7" stroke-linecap="round"/>
+        <line x1="236" y1="112" x2="254" y2="134" stroke="#1B1B1F" stroke-width="7" stroke-linecap="round"/>
+        <circle cx="224" cy="96" r="20" fill="#CFEFFF" stroke="#1B1B1F" stroke-width="5"/>
+        <path d="M214 90 Q218 84 226 84" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round"/>
+        <path d="M100 152 Q116 144 132 152" fill="none" stroke="#8A3A16" stroke-width="5" stroke-linecap="round"/>
+        <path d="M168 152 Q184 144 200 152" fill="none" stroke="#8A3A16" stroke-width="5" stroke-linecap="round"/>
+        <ellipse cx="117" cy="184" rx="14" ry="20" fill="#3A2320"/>
+        <ellipse cx="183" cy="184" rx="14" ry="20" fill="#3A2320"/>
+        <circle cx="122" cy="176" r="5" fill="#ffffff"/>
+        <circle cx="188" cy="176" r="5" fill="#ffffff"/>
+        <ellipse cx="96" cy="214" rx="14" ry="8" fill="#FF8E8E" opacity="0.5"/>
+        <ellipse cx="204" cy="214" rx="14" ry="8" fill="#FF8E8E" opacity="0.5"/>
+        <path d="M136 222 Q150 236 164 222" fill="#ffffff" stroke="#3A2320" stroke-width="4" stroke-linejoin="round"/>
+      </svg>
