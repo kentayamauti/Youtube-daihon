@@ -8,6 +8,7 @@ import argparse
 import csv
 import json
 import re
+import urllib.error
 import urllib.parse
 import urllib.request
 
@@ -115,3 +116,19 @@ def search(query, days=31, limit=50, order="viewCount"):
                     "ch_handle": c.get("snippet", {}).get("customUrl"),
                     "subs": int(c.get("statistics", {}).get("subscriberCount", 0) or 0)})
     return out
+
+
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, *a, **k):
+        return None
+
+
+def is_short(video_id):
+    """ショート（縦長）なら True。/shorts/ のURLがそのまま開けばショート、普通の動画ページに飛ばされれば横長"""
+    op = urllib.request.build_opener(_NoRedirect)
+    try:
+        return op.open(f"https://www.youtube.com/shorts/{video_id}", timeout=20).status == 200
+    except urllib.error.HTTPError as e:
+        if e.code in (301, 302, 303, 307, 308):
+            return False
+        raise

@@ -89,6 +89,7 @@ def get_meta(vid):
         "views": int(st.get("viewCount", 0)), "likes": int(st.get("likeCount", 0)),
         "comments": int(st.get("commentCount", 0)),
         "tags": v["snippet"].get("tags", []), "description": v["snippet"]["description"],
+        "is_short": ytapi.is_short(vid),
         "fetched_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
     }
 
@@ -192,7 +193,8 @@ def index():
         rows.append({
             "公開日": m["published"][:10], "チャンネル": m["channel"], "登録者": m["channel_subs"],
             "再生": m["views"], "再生/登録者": round(m["views"] / max(m["channel_subs"], 1), 2),
-            "長さ(分)": round(m["sec"] / 60, 1), "タイトル": m["title"], "動画ID": m["id"],
+            "長さ(分)": round(m["sec"] / 60, 1), "形": {True: "ショート", False: "横長"}.get(m.get("is_short"), "?"),
+            "タイトル": m["title"], "動画ID": m["id"],
             "文字起こし": ("YouTube" if os.path.exists(os.path.join(dirpath, "transcript.md")) and "YouTube" in
                        open(os.path.join(dirpath, "transcript.md"), encoding="utf-8").readline()
                        else "Gemini" if os.path.exists(os.path.join(dirpath, "transcript.md")) else ""),
