@@ -2,7 +2,7 @@
 <!--
   料理チャンネル型のサムネ（伸びている料理動画の型：syun cooking・HIRO SWEETS）。1280×720。
   写真を画面いっぱいに1〜2枚（全体＋断面）、上と下に白い太字＋黒の太い縁取りを1行ずつ。キャラ・顔は出さない。
-  ?top=上の文字&bottom=下の文字&bg=写真1&bg2=写真2&badge=小さい丸の文字
+  ?top=上の文字&bottom=下の文字&bg=写真1&bg2=写真2&badge=小さい丸の文字&style=setsuyaku（節約ごはん型：細めのふち・左寄せ）
 -->
 <style>
 @font-face{font-family:"NotoBlack";src:url("../fonts/NotoSansJP-Black.ttf")}
@@ -13,6 +13,9 @@ body{position:relative;margin:0;width:1280px;height:720px;overflow:hidden;backgr
   -webkit-text-stroke:18px #111;paint-order:stroke fill;letter-spacing:-2px;filter:drop-shadow(0 6px 0 rgba(0,0,0,.35))}
 .top{top:0}.bottom{bottom:4px}
 .t span{display:inline-block}
+.t.left{text-align:left;padding-left:14px}
+/* 節約ごはん型（夫手取り17万円の節約ごはん）：白い文字に細めの黒ふちと影、左寄せ、上下1行ずつ */
+body.setsuyaku .t{-webkit-text-stroke:9px #111;letter-spacing:0;filter:drop-shadow(3px 5px 0 rgba(0,0,0,.45))}
 .badge{position:absolute;left:40px;bottom:150px;background:#fff;color:#111;border:4px solid #111;border-radius:40px;padding:0 22px;font-size:44px}
 </style></head><body>
 <div class="ph" id="p1"></div><div class="ph" id="p2"></div>
@@ -21,6 +24,7 @@ body{position:relative;margin:0;width:1280px;height:720px;overflow:hidden;backgr
 <div class="badge" id="badge"></div>
 <script>
 const q=new URLSearchParams(location.search);
+if(q.get('style')){document.body.classList.add(q.get('style'));document.querySelectorAll('.t').forEach(e=>e.classList.add('left'))}
 const p1=document.getElementById('p1'),p2=document.getElementById('p2');
 p1.style.backgroundImage=`url(${q.get('bg')||'food_placeholder.svg'})`;
 if(q.get('bg2')){p1.style.left='0';p1.style.width='640px';p2.style.left='640px';p2.style.width='640px';p2.style.backgroundImage=`url(${q.get('bg2')})`}
