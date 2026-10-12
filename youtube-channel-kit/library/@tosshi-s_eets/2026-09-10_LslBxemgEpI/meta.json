@@ -13,5 +13,6 @@
  "comments": 333,
  "tags": [],
  "description": "",
- "fetched_at": "2026-10-12T15:25:34Z"
+ "fetched_at": "2026-10-12T15:25:34Z",
+ "is_short": true
 }

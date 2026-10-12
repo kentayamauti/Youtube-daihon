@@ -8,6 +8,7 @@
 
 | ファイル | 中身 | 取り方 |
 |---|---|---|
+| `カード.md` | **見返すときはまずこれ**：調べた日・タイトル・サムネ・数字・形（横長／ショート）・いいねの多いコメント上位10個・メモ欄 | 自動で作る。メモ欄に書き足したことは残る |
 | `meta.json` | タイトル、概要欄、タグ、再生・高評価・コメント数、長さ、チャンネル登録者数、取得日 | YouTube Data API |
 | `thumbnail.jpg` | サムネイル | YouTubeの画像サーバー |
 | `frames/frame_25.jpg` ほか2枚 | 動画の画面（25%・50%・75%地点） | YouTubeが自動で作る画像 |
@@ -22,6 +23,7 @@
 python3 -I youtube-channel-kit/tools/library.py add <動画IDかURL> [...]   # 足りないものだけ取る
 python3 -I youtube-channel-kit/tools/library.py add ... --summary          # Geminiの要約も作る（ふだんは不要）
 python3 -I youtube-channel-kit/tools/library.py index                      # index.csv を作り直す
+python3 -I youtube-channel-kit/tools/library.py cards                      # 全部の動画のカード.md を作り直す（メモは残る）
 ```
 
 - 数字（再生数など）は取得日の時点のもの。新しくしたいときは、もう一度 `add` すると `meta.json` が上書きされる

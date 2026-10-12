@@ -5,6 +5,7 @@
   thumbnail.jpg    サムネイル
   frames/          動画の画面（25%・50%・75%地点。YouTubeが自動で作る画像）
   comments.json    人気順コメント（最大300件）
+  カード.md        調べた日・タイトル・サムネ・数字・いいねの多いコメント上位10個（見返すときはまずこれ）
   transcript.md    台本の文字起こし（YouTubeの文字起こし＝字幕/自動字幕。なければGemini）
   transcript_gemini.md  Geminiの文字起こし（話者名つき。作ってあれば）
   summary.md       （--summary のときだけ）Geminiの要約
@@ -15,6 +16,7 @@ library/index.csv  全動画の一覧（調べる前にまずここを見る）
   python3 -I tools/library.py add ... --summary               # Geminiの要約も作る（ふだんは不要）
   字幕のない動画だけ、文字起こしを Gemini で作る（--no-gemini で飛ばす。あとで --no-gemini なしで add し直せば足りない分だけ作る）
   python3 -I tools/library.py index                           # index.csv を作り直す
+  python3 -I tools/library.py cards                           # 全部の動画のカード.md を作り直す（メモは残る）
 """
 import argparse
 import base64
@@ -140,7 +142,13 @@ def add(vid, summary=False, import_dirs=(), no_gemini=False):
     meta = get_meta(vid)
     d = folder_for(meta)
     os.makedirs(os.path.join(d, "frames"), exist_ok=True)
-    json.dump(meta, open(os.path.join(d, "meta.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    mp = os.path.join(d, "meta.json")
+    old = json.load(open(mp, encoding="utf-8")) if os.path.exists(mp) else {}
+    days = old.get("researched_dates") or ([old["fetched_at"][:10]] if old.get("fetched_at") else [])
+    if meta["fetched_at"][:10] not in days:
+        days.append(meta["fetched_at"][:10])
+    meta["researched_dates"] = days
+    json.dump(meta, open(mp, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
     if not os.path.exists(os.path.join(d, "thumbnail.jpg")):
         save_image(vid, ["maxresdefault", "sddefault", "hqdefault"], os.path.join(d, "thumbnail.jpg"))
     for pct, k in ((25, 1), (50, 2), (75, 3)):
@@ -180,8 +188,45 @@ def add(vid, summary=False, import_dirs=(), no_gemini=False):
     if summary and not os.path.exists(sp):
         with open(sp, "w", encoding="utf-8") as f:
             f.write(gemini_summary(meta, d))
+    card(d)
     print("保存", d)
     return d
+
+
+def card(d):
+    """1本の動画の「カード」：調べた日・タイトル・サムネ・数字・人気順コメント上位10個を1ファイルにまとめる"""
+    m = json.load(open(os.path.join(d, "meta.json"), encoding="utf-8"))
+    days = m.get("researched_dates") or [m["fetched_at"][:10]]
+    shape = {True: "ショート（縦長）", False: "横長"}.get(m.get("is_short"), "不明")
+    lines = [
+        f"# {m['title']}", "",
+        f"- 調べた日：{'、'.join(days)}（数字はいちばん新しい日の時点）",
+        f"- チャンネル：{m['channel']}（{m.get('channel_handle', '')}、登録者 {m['channel_subs']:,}人）",
+        f"- 公開日：{m['published'][:10]}　長さ：{m['sec'] // 60}分{m['sec'] % 60:02d}秒　形：{shape}",
+        f"- 再生：{m['views']:,}回（登録者の {m['views'] / max(m['channel_subs'], 1):.1f}倍）　高評価：{m['likes']:,}　コメント：{m['comments']:,}",
+        f"- URL：{m['url']}", "",
+        "## サムネ", "", "![サムネ](thumbnail.jpg)", "",
+        "## 人気のコメント（いいねの多い順・上から10個）", "",
+    ]
+    cp = os.path.join(d, "comments.json")
+    cs = json.load(open(cp, encoding="utf-8")) if os.path.exists(cp) else []
+    if cs:
+        for i, c in enumerate(sorted(cs, key=lambda c: -c["likes"])[:10], 1):
+            text = c["text"].replace("\n", " ").strip()
+            lines.append(f"{i}. （いいね {c['likes']:,}）{text}")
+    else:
+        lines.append("（コメントなし、またはコメント欄が閉じている）")
+    lines += ["", "## メモ（なぜ伸びた？ 視聴者は何を求めている？）", "", "- "]
+    path = os.path.join(d, "カード.md")
+    memo = ""
+    if os.path.exists(path):  # 書き足したメモは消さない
+        old = open(path, encoding="utf-8").read()
+        if "## メモ" in old:
+            memo = old.split("## メモ", 1)[1].split("\n", 2)[-1]
+    text = "\n".join(lines)
+    if memo.strip() and memo.strip() != "-":
+        text = text.rsplit("- ", 1)[0] + memo.lstrip("\n")
+    open(path, "w", encoding="utf-8").write(text.rstrip("\n") + "\n")
 
 
 def index():
@@ -211,7 +256,7 @@ def index():
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["add", "index"])
+    ap.add_argument("cmd", choices=["add", "index", "cards"])
     ap.add_argument("videos", nargs="*")
     ap.add_argument("--summary", action="store_true", help="Geminiの要約も作る（ふだんは不要）")
     ap.add_argument("--no-gemini", action="store_true", help="字幕がなくてもGeminiで起こさない（サムネ・数字だけ急いで集めるとき）")
@@ -223,4 +268,8 @@ if __name__ == "__main__":
                 add(v, a.summary, a.import_dir, a.no_gemini)
             except Exception as e:  # 1本の失敗で全体を止めない
                 print("失敗", v, e)
+    if a.cmd == "cards":  # いまある全部の動画のカードを作り直す
+        for dirpath, _, files in os.walk(ROOT):
+            if "meta.json" in files:
+                card(dirpath)
     index()
