@@ -4,6 +4,7 @@
   差し替えるところ：
     --bg   背景の写真（自分で撮った写真が一番安全）
     --char キャラの画像（透過PNG。顔が大きく、胸から上）
+    style  purple（紫の大文字1行・右下に紫の小見出し）／ redblack（黒と赤の2行・右上に白枠の小見出し）
     .band  黄色帯の文字（7文字前後で1行。2行にするときは .band.two）
     .label 右下の小見出し（4〜5文字）
   使い方：URLのうしろに ?band=文字&label=文字&bg=画像&char=画像 を付けて開く
@@ -20,6 +21,11 @@ body{position:relative;margin:0;width:1280px;height:720px;overflow:hidden;backgr
   text-shadow:0 0 0 #9B00FF;-webkit-text-stroke:4px #fff;paint-order:stroke fill}
 .band.two{flex-direction:column;font-size:104px;letter-spacing:-3px}
 .band .sub{color:#111}
+.band span{filter:drop-shadow(0 6px 0 rgba(0,0,0,.35))}
+/* 赤黒の型（お手本の24時間テレビ・太田光の回）：黄色帯に黒の1行目と赤の2行目、右上に白枠の小見出し */
+body.redblack .band{color:#E8001C;-webkit-text-stroke:8px #fff}
+body.redblack .band .sub{color:#111}
+body.redblack .label{top:18px;background:#fff;border:5px solid #1d4fd8;color:#1d4fd8;-webkit-text-stroke:0}
 .label{position:absolute;right:16px;top:368px;background:#9B00FF;border:6px solid #111;padding:2px 14px 8px;
   font-size:66px;color:#E8FF3A;-webkit-text-stroke:6px #111;paint-order:stroke fill;line-height:1.1}
 </style></head><body>
@@ -30,6 +36,7 @@ body{position:relative;margin:0;width:1280px;height:720px;overflow:hidden;backgr
 <div class="band" id="band"></div>
 <script>
 const q=new URLSearchParams(location.search);
+if(q.get('style')) document.body.classList.add(q.get('style'));
 document.getElementById('bg').style.backgroundImage=`url(${q.get('bg')||'bg_placeholder.svg'})`;
 const c=document.getElementById('char'); if(q.get('char')) c.src=q.get('char'); else c.remove();
 document.getElementById('label').textContent=q.get('label')||'小見出し';
