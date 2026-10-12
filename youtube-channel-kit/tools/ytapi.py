@@ -1,0 +1,91 @@
+"""YouTube Data API v3 で数字とコメントを取る（キーは環境のネットワークシークレットで付く）。
+
+使い方:
+  python3 -I tools/ytapi.py videos @ハンドル 出力.csv [--max 50]
+  python3 -I tools/ytapi.py comments <動画ID> 出力.json [--max 300]
+"""
+import argparse
+import csv
+import json
+import re
+import urllib.parse
+import urllib.request
+
+BASE = "https://www.googleapis.com/youtube/v3/"
+
+
+def api(path, **params):
+    url = BASE + path + "?" + urllib.parse.urlencode(params)
+    return json.loads(urllib.request.urlopen(url, timeout=60).read())
+
+
+def channel(handle):
+    it = api("channels", part="snippet,statistics,contentDetails", forHandle=handle)["items"][0]
+    return {"id": it["id"], "title": it["snippet"]["title"],
+            "subs": int(it["statistics"].get("subscriberCount", 0)),
+            "uploads": it["contentDetails"]["relatedPlaylists"]["uploads"]}
+
+
+def seconds(iso):
+    h, m, s = (int(x) if x else 0 for x in re.match(r"PT(?:(\d+)H)?(?:(\d+)M)?(?:(\d+)S)?", iso).groups())
+    return h * 3600 + m * 60 + s
+
+
+def videos(handle, limit=50):
+    ch = channel(handle)
+    ids, token = [], None
+    while len(ids) < limit:
+        p = {"part": "contentDetails", "playlistId": ch["uploads"], "maxResults": 50}
+        if token:
+            p["pageToken"] = token
+        r = api("playlistItems", **p)
+        ids += [i["contentDetails"]["videoId"] for i in r["items"]]
+        token = r.get("nextPageToken")
+        if not token:
+            break
+    out = []
+    for i in range(0, len(ids[:limit]), 50):
+        r = api("videos", part="snippet,statistics,contentDetails", id=",".join(ids[i:i + 50]))
+        for v in r["items"]:
+            st = v["statistics"]
+            out.append({"id": v["id"], "published": v["snippet"]["publishedAt"],
+                        "title": v["snippet"]["title"], "sec": seconds(v["contentDetails"]["duration"]),
+                        "views": int(st.get("viewCount", 0)), "likes": int(st.get("likeCount", 0)),
+                        "comments": int(st.get("commentCount", 0))})
+    return ch, out
+
+
+def comments(video_id, limit=300, order="relevance"):
+    out, token = [], None
+    while len(out) < limit:
+        p = {"part": "snippet", "videoId": video_id, "maxResults": 100, "order": order, "textFormat": "plainText"}
+        if token:
+            p["pageToken"] = token
+        r = api("commentThreads", **p)
+        for t in r["items"]:
+            s = t["snippet"]["topLevelComment"]["snippet"]
+            out.append({"text": s["textDisplay"], "likes": s["likeCount"], "replies": t["snippet"]["totalReplyCount"]})
+        token = r.get("nextPageToken")
+        if not token:
+            break
+    return out[:limit]
+
+
+if __name__ == "__main__":
+    ap = argparse.ArgumentParser()
+    ap.add_argument("cmd", choices=["videos", "comments"])
+    ap.add_argument("target")
+    ap.add_argument("out")
+    ap.add_argument("--max", type=int, default=50)
+    a = ap.parse_args()
+    if a.cmd == "videos":
+        ch, vs = videos(a.target, a.max)
+        with open(a.out, "w", encoding="utf-8", newline="") as f:
+            w = csv.DictWriter(f, fieldnames=list(vs[0]))
+            w.writeheader()
+            w.writerows(vs)
+        print(ch["title"], "登録者", ch["subs"], len(vs), "本 →", a.out)
+    else:
+        cs = comments(a.target, a.max)
+        json.dump(cs, open(a.out, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+        print(len(cs), "件 →", a.out)
