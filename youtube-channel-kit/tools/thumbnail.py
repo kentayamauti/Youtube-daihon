@@ -8,6 +8,7 @@
 使い方:
   python3 -I tools/thumbnail.py gen  <出力.png> "絵の説明（英語推奨）" [--ref キャラ見本.png ...]
   python3 -I tools/thumbnail.py make <出力.jpg> --band "帯の文字" [--label 小見出し] [--bg 背景] [--char キャラ透過PNG] [--style purple|redblack]
+  python3 -I tools/thumbnail.py make <出力.jpg> --template food --top "上の文字" --bottom "下の文字" --bg 写真1 [--bg2 写真2] [--badge 絶品]
   python3 -I tools/thumbnail.py check <一覧.png> 案1.jpg 案2.jpg ... [--compare 競合のthumbnail.jpg ...]
 
 帯の文字を2行にするときは "上の行|下の行"。
@@ -67,22 +68,25 @@ def gen(out, prompt, refs=()):
     raise RuntimeError("Geminiで絵を作れなかった（無料枠では画像生成は使えない。課金を有効にする）: " + str(last))
 
 
-def make(out, band, label="", bg=None, char=None, style="purple"):
-    """ひな形をいったん作業フォルダにコピーして、画像と一緒に開いて撮る"""
+TEMPLATES = {"paurach": "paurach_type.html", "food": "food_type.html"}
+
+
+def make(out, template="paurach", texts=None, files=None):
+    """ひな形をいったん作業フォルダにコピーして、画像と一緒に開いて撮る。
+    texts: 文字の項目（band, label, style / top, bottom, badge）、files: 画像の項目（bg, bg2, char）"""
+    tdir = os.path.dirname(TEMPLATE)
     work = tempfile.mkdtemp()
-    shutil.copy(TEMPLATE, os.path.join(work, "t.html"))
-    for f in os.listdir(os.path.dirname(TEMPLATE)):
+    for f in os.listdir(tdir):
         if f.endswith(".svg"):
-            shutil.copy(os.path.join(os.path.dirname(TEMPLATE), f), work)
-    q = {"band": band, "label": label, "style": style}
-    for key, path in (("bg", bg), ("char", char)):
+            shutil.copy(os.path.join(tdir, f), work)
+    q = {k: v for k, v in (texts or {}).items() if v}
+    for key, path in (files or {}).items():
         if path:
             name = key + os.path.splitext(path)[1]
             shutil.copy(path, os.path.join(work, name))
             q[key] = name
     fonts = os.path.join(KIT, "assets", "fonts")
-    os.makedirs(os.path.join(os.path.dirname(work), "fonts"), exist_ok=True)
-    html = open(os.path.join(work, "t.html"), encoding="utf-8").read().replace(
+    html = open(os.path.join(tdir, TEMPLATES[template]), encoding="utf-8").read().replace(
         'url("../fonts/', 'url("file://' + fonts + '/')
     open(os.path.join(work, "t.html"), "w", encoding="utf-8").write(html)
     shot = os.path.join(work, "shot.png")
@@ -132,11 +136,11 @@ if __name__ == "__main__":
     g.add_argument("--ref", action="append", default=[])
     m = sub.add_parser("make")
     m.add_argument("out")
-    m.add_argument("--band", required=True)
-    m.add_argument("--label", default="")
-    m.add_argument("--bg")
-    m.add_argument("--char")
-    m.add_argument("--style", default="purple", choices=["purple", "redblack"])
+    m.add_argument("--template", default="paurach", choices=list(TEMPLATES))
+    for k in ("band", "label", "style", "top", "bottom", "badge"):  # 文字の項目
+        m.add_argument("--" + k)
+    for k in ("bg", "bg2", "char"):  # 画像の項目
+        m.add_argument("--" + k)
     c = sub.add_parser("check")
     c.add_argument("out")
     c.add_argument("mine", nargs="+")
@@ -145,6 +149,7 @@ if __name__ == "__main__":
     if a.cmd == "gen":
         gen(a.out, a.prompt, a.ref)
     elif a.cmd == "make":
-        make(a.out, a.band, a.label, a.bg, a.char, a.style)
+        make(a.out, a.template, {k: getattr(a, k) for k in ("band", "label", "style", "top", "bottom", "badge")},
+             {k: getattr(a, k) for k in ("bg", "bg2", "char")})
     else:
         check(a.out, a.mine, a.compare)

@@ -5,7 +5,18 @@ description: YouTubeのサムネを高品質に作る。「サムネ作って」
 
 # サムネを作る（高品質の手順）
 
-道具：`youtube-channel-kit/tools/thumbnail.py`（gen／make／check）。ひな形：`youtube-channel-kit/assets/thumb_templates/paurach_type.html`。
+道具：`youtube-channel-kit/tools/thumbnail.py`（gen／make／check）。
+
+**キャラは動画の中だけ。サムネには入れない**（オーナー決定 2026-10-12）。サムネは写真と文字で勝負する。
+
+ひな形はチャンネル（ジャンル）ごとに選ぶ：
+
+| ひな形 | 使うチャンネル | 型 |
+|---|---|---|
+| `paurach`（`--style purple`／`redblack`） | 01 確かめ屋ネネ（時事・企業・商品） | 上 2/3 に商品や建物の写真と集中線、右に小見出しの箱、下 1/3 に黄色帯の大きな文字（1行） |
+| `food` | 02 料理 | 料理の写真を画面いっぱいに1〜2枚（全体＋断面）、上と下に白い太字＋黒の太い縁取り。言葉は「もう買わない」「買うのやめた」のような得する言い切り |
+
+新しいジャンルのチャンネルは、そのジャンルで伸びている動画のサムネをライブラリに保存して型を決め、`assets/thumb_templates/` にひな形を足す。
 
 ## 手順
 
@@ -21,15 +32,17 @@ description: YouTubeのサムネを高品質に作る。「サムネ作って」
    ```
    python3 -I youtube-channel-kit/tools/thumbnail.py gen <背景.png> "絵の説明（英語）" --ref <キャラの見本.png>
    ```
-   - キャラは必ず見本画像を渡して、同じ顔・服・色にする
+   - 人や商品が出る絵で、同じものを何度も出すときは見本画像を渡して揃える
+   - 料理は、絵を作らずオーナーが撮った写真を使う（本物の写真が一番強い）
    - 下 1/3 は文字を載せるので、絵は上 2/3 に寄せる
    - Geminiの画像生成は課金が必要。使えないときは、オーナーが撮った写真か、手元の素材で作る
    - 他人の写真（企業の宣材・報道写真・番組の画面）は使わない
 4. **文字を載せて3案作る**
    ```
-   python3 -I youtube-channel-kit/tools/thumbnail.py make <案A.jpg> --band "帯の文字" --label 小見出し --bg 背景.png --char キャラ.png [--style purple|redblack]
+   python3 -I youtube-channel-kit/tools/thumbnail.py make <案A.jpg> --band "帯の文字" --label 小見出し --bg 背景.png [--style purple|redblack]
+   python3 -I youtube-channel-kit/tools/thumbnail.py make <案A.jpg> --template food --top "上の文字" --bottom "下の文字" --bg 写真1 --bg2 写真2 [--badge 材料2つ]
    ```
-   - 3案は「言い切る言葉」か「型（purple／redblack）」を変える
+   - 3案は「言い切る言葉」か「型」を変える
 5. **小さいサイズで比べる**
    ```
    python3 -I youtube-channel-kit/tools/thumbnail.py check <一覧.png> 案A.jpg 案B.jpg 案C.jpg --compare <競合のthumbnail.jpg>
@@ -42,7 +55,7 @@ description: YouTubeのサムネを高品質に作る。「サムネ作って」
 - [ ] スマホの大きさ（168×94）でも帯の文字が読める
 - [ ] 文字は3〜6語、太いゴシック体、縁取りあり（明朝体は使わない）
 - [ ] 何の話か（主語：企業・商品）が一目で分かる
-- [ ] キャラの顔が大きく、表情で気持ちが伝わる
+- [ ] 写真の主役（商品・料理）が大きく、何の話か一目で分かる
 - [ ] 競合のサムネと並べたとき、負けていない（色・大きさ・言葉）
 - [ ] タイトルと同じ言葉をくり返していない
 - [ ] 1280×720、2MB以下
