@@ -2,7 +2,7 @@
 
 使い方:
   python3 -I tools/gemini_transcript.py <動画URLかID> [<動画URLかID> ...] --out <保存フォルダ>
-  （オプション）--model gemini-3.8-flash
+  （オプション）--model gemini-3.5-flash
 
 APIキーは環境のネットワークシークレットで generativelanguage.googleapis.com に
 X-Goog-Api-Key として付ける（スクリプトはキーを扱わない）。
@@ -34,7 +34,24 @@ def video_id(s):
     return m.group(1) if m else s
 
 
+FALLBACK = ["gemini-3.5-flash", "gemini-3.6-flash", "gemini-3-flash-preview", "gemini-3.8-flash"]
+
+
 def transcribe_part(vid, model, start, end):
+    """混んでいるモデルは飛ばして、次のモデルで試す"""
+    models = [model] + [m for m in FALLBACK if m != model]
+    for rnd in range(4):
+        for m in models:
+            try:
+                return _call(vid, m, start, end)
+            except urllib.error.HTTPError as e:
+                if e.code not in (429, 500, 502, 503, 504):
+                    raise
+        time.sleep(60 * (rnd + 1))
+    raise RuntimeError("どのモデルも混雑していて失敗")
+
+
+def _call(vid, model, start, end):
     url = f"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
     body = {
         "contents": [{"parts": [
@@ -47,14 +64,7 @@ def transcribe_part(vid, model, start, end):
     }
     req = urllib.request.Request(url, data=json.dumps(body).encode(),
                                  headers={"Content-Type": "application/json"})
-    for attempt in range(6):  # 混雑(429/5xx)は待ってやり直す
-        try:
-            r = json.loads(urllib.request.urlopen(req, timeout=600).read())
-            break
-        except urllib.error.HTTPError as e:
-            if e.code not in (429, 500, 502, 503, 504) or attempt == 5:
-                raise
-            time.sleep(30 * (attempt + 1))
+    r = json.loads(urllib.request.urlopen(req, timeout=600).read())
     return "".join(p.get("text", "") for p in r["candidates"][0]["content"]["parts"])
 
 
@@ -66,6 +76,7 @@ def transcribe(vid, model):
         end = min(start + CHUNK, total)
         parts.append(f"<!-- {start // 60}:{start % 60:02d}〜{end // 60}:{end % 60:02d} -->")
         parts.append(transcribe_part(vid, model, start, end).strip())
+        print(f"  {vid} {end}/{total}秒", flush=True)
     return "\n".join(parts)
 
 
@@ -73,7 +84,7 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("videos", nargs="+")
     ap.add_argument("--out", required=True)
-    ap.add_argument("--model", default="gemini-3.8-flash")
+    ap.add_argument("--model", default="gemini-3.5-flash")
     a = ap.parse_args()
     os.makedirs(a.out, exist_ok=True)
     for v in a.videos:

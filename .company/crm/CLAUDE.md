@@ -10,3 +10,10 @@
 - タスクは `やることリスト.md`、成果物の型は `_template.md`。
 - 終わったら やることリスト の「完了」に移し、`ceo/受付台帳.md` の状態も更新する。
 - 外に出るものはオーナーの OK を取ってから。
+
+## 全社ルール：YouTube動画を調べるとき（2026-10-12 オーナー決定）
+
+- 調べる前に、まず `youtube-channel-kit/library/index.csv` を見る。調べ済みの動画は調べ直さない
+- 新しく調べた動画は、必ず `python3 -I youtube-channel-kit/tools/library.py add <動画ID>` でライブラリに保存する（数字・サムネ・画面・コメント・台本の文字起こし・要約が1本1フォルダに残る）
+- 動画の中身は、台本の文字起こし（`transcript.md`）と要約（`summary.md`）で把握する
+- 詳しくは `ceo/decisions/2026-10-12_動画ライブラリ.md`

@@ -89,3 +89,29 @@ if __name__ == "__main__":
         cs = comments(a.target, a.max)
         json.dump(cs, open(a.out, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
         print(len(cs), "件 →", a.out)
+
+
+def search(query, days=31, limit=50, order="viewCount"):
+    """期間内の動画を検索し、再生数・チャンネル登録者数をつけて返す（1回100ユニット）"""
+    from datetime import datetime, timedelta, timezone
+    after = (datetime.now(timezone.utc) - timedelta(days=days)).strftime("%Y-%m-%dT%H:%M:%SZ")
+    r = api("search", part="snippet", q=query, type="video", order=order, publishedAfter=after,
+            maxResults=min(limit, 50), regionCode="JP", relevanceLanguage="ja")
+    ids = [i["id"]["videoId"] for i in r["items"]]
+    if not ids:
+        return []
+    vs = api("videos", part="snippet,statistics,contentDetails", id=",".join(ids))["items"]
+    chs = {c["id"]: c for c in api("channels", part="snippet,statistics",
+                                   id=",".join({v["snippet"]["channelId"] for v in vs}))["items"]}
+    out = []
+    for v in vs:
+        c = chs.get(v["snippet"]["channelId"], {})
+        out.append({"id": v["id"], "title": v["snippet"]["title"], "published": v["snippet"]["publishedAt"],
+                    "sec": seconds(v["contentDetails"]["duration"]),
+                    "views": int(v["statistics"].get("viewCount", 0)),
+                    "likes": int(v["statistics"].get("likeCount", 0)),
+                    "comments": int(v["statistics"].get("commentCount", 0)),
+                    "ch_id": v["snippet"]["channelId"], "ch": v["snippet"]["channelTitle"],
+                    "ch_handle": c.get("snippet", {}).get("customUrl"),
+                    "subs": int(c.get("statistics", {}).get("subscriberCount", 0) or 0)})
+    return out
