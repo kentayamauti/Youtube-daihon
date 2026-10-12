@@ -13,7 +13,7 @@ library/index.csv  全動画の一覧（調べる前にまずここを見る）
 使い方:
   python3 -I tools/library.py add <動画IDかURL> [...]        # 足りないものだけ取る（取得済みは飛ばす）
   python3 -I tools/library.py add ... --summary               # Geminiの要約も作る（ふだんは不要）
-  字幕のない動画だけ、文字起こしを Gemini で作る
+  字幕のない動画だけ、文字起こしを Gemini で作る（--no-gemini で飛ばす。あとで --no-gemini なしで add し直せば足りない分だけ作る）
   python3 -I tools/library.py index                           # index.csv を作り直す
 """
 import argparse
@@ -134,7 +134,7 @@ def gemini_summary(meta, d):
     raise RuntimeError("Gemini が混雑していて要約できなかった")
 
 
-def add(vid, summary=False, import_dirs=()):
+def add(vid, summary=False, import_dirs=(), no_gemini=False):
     vid = gt.video_id(vid)
     meta = get_meta(vid)
     d = folder_for(meta)
@@ -171,7 +171,7 @@ def add(vid, summary=False, import_dirs=()):
             with open(tp, "w", encoding="utf-8") as f:
                 f.write(f"<!-- {meta['url']} / YouTubeの{kind}（{len(lines)}行） -->\n# {meta['title']}\n\n"
                         + yt_transcript.to_markdown(lines) + "\n")
-    if not os.path.exists(tp):  # 字幕がない動画だけ Gemini で起こす
+    if not os.path.exists(tp) and not no_gemini:  # 字幕がない動画だけ Gemini で起こす
         text = gt.transcribe(vid, gt.FALLBACK[0])
         with open(tp, "w", encoding="utf-8") as f:
             f.write(f"<!-- {meta['url']} / Gemini による文字起こし（一字一句ではない） -->\n{text}\n")
@@ -212,12 +212,13 @@ if __name__ == "__main__":
     ap.add_argument("cmd", choices=["add", "index"])
     ap.add_argument("videos", nargs="*")
     ap.add_argument("--summary", action="store_true", help="Geminiの要約も作る（ふだんは不要）")
+    ap.add_argument("--no-gemini", action="store_true", help="字幕がなくてもGeminiで起こさない（サムネ・数字だけ急いで集めるとき）")
     ap.add_argument("--import-dir", action="append", default=[])
     a = ap.parse_args()
     if a.cmd == "add":
         for v in a.videos:
             try:
-                add(v, a.summary, a.import_dir)
+                add(v, a.summary, a.import_dir, a.no_gemini)
             except Exception as e:  # 1本の失敗で全体を止めない
                 print("失敗", v, e)
     index()
