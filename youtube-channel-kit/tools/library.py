@@ -5,13 +5,15 @@
   thumbnail.jpg    サムネイル
   frames/          動画の画面（25%・50%・75%地点。YouTubeが自動で作る画像）
   comments.json    人気順コメント（最大300件）
-  transcript.md    台本の文字起こし（Gemini。YouTubeの文字起こしが取れるようになったら差し替え）
-  summary.md       企画・構成・主張・サムネとの約束・画面の作り・良い点/弱い点（Gemini）
+  transcript.md    台本の文字起こし（YouTubeの文字起こし＝字幕/自動字幕。なければGemini）
+  transcript_gemini.md  Geminiの文字起こし（話者名つき。作ってあれば）
+  summary.md       （--summary のときだけ）Geminiの要約
 library/index.csv  全動画の一覧（調べる前にまずここを見る）
 
 使い方:
   python3 -I tools/library.py add <動画IDかURL> [...]        # 足りないものだけ取る（取得済みは飛ばす）
-  python3 -I tools/library.py add ... --skip-gemini           # 数字・サムネ・画面・コメントだけ
+  python3 -I tools/library.py add ... --summary               # Geminiの要約も作る（ふだんは不要）
+  字幕のない動画だけ、文字起こしを Gemini で作る
   python3 -I tools/library.py index                           # index.csv を作り直す
 """
 import argparse
@@ -29,6 +31,7 @@ from datetime import datetime, timezone
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import gemini_transcript as gt  # noqa: E402
 import ytapi  # noqa: E402
+import yt_transcript  # noqa: E402
 
 ROOT = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "library")
 
@@ -131,7 +134,7 @@ def gemini_summary(meta, d):
     raise RuntimeError("Gemini が混雑していて要約できなかった")
 
 
-def add(vid, skip_gemini=False, import_dirs=()):
+def add(vid, summary=False, import_dirs=()):
     vid = gt.video_id(vid)
     meta = get_meta(vid)
     d = folder_for(meta)
@@ -156,15 +159,24 @@ def add(vid, skip_gemini=False, import_dirs=()):
             if os.path.exists(old):
                 os.replace(old, tp)
                 break
-    if skip_gemini:
-        print("保存（Geminiなし）", d)
-        return d
-    if not os.path.exists(tp):
+    if not os.path.exists(tp) or "gemini" in open(tp, encoding="utf-8").readline().lower():
+        try:
+            lines, kind = yt_transcript.fetch(vid)
+        except Exception as e:  # YouTube側で止められたときはGeminiに回す
+            print("  YouTubeの文字起こし取れず", vid, e)
+            lines = None
+        if lines:
+            if os.path.exists(tp):  # 先にGeminiで起こしたものは別名で残す
+                os.replace(tp, os.path.join(d, "transcript_gemini.md"))
+            with open(tp, "w", encoding="utf-8") as f:
+                f.write(f"<!-- {meta['url']} / YouTubeの{kind}（{len(lines)}行） -->\n# {meta['title']}\n\n"
+                        + yt_transcript.to_markdown(lines) + "\n")
+    if not os.path.exists(tp):  # 字幕がない動画だけ Gemini で起こす
         text = gt.transcribe(vid, gt.FALLBACK[0])
         with open(tp, "w", encoding="utf-8") as f:
             f.write(f"<!-- {meta['url']} / Gemini による文字起こし（一字一句ではない） -->\n{text}\n")
     sp = os.path.join(d, "summary.md")
-    if not os.path.exists(sp):
+    if summary and not os.path.exists(sp):
         with open(sp, "w", encoding="utf-8") as f:
             f.write(gemini_summary(meta, d))
     print("保存", d)
@@ -181,7 +193,9 @@ def index():
             "公開日": m["published"][:10], "チャンネル": m["channel"], "登録者": m["channel_subs"],
             "再生": m["views"], "再生/登録者": round(m["views"] / max(m["channel_subs"], 1), 2),
             "長さ(分)": round(m["sec"] / 60, 1), "タイトル": m["title"], "動画ID": m["id"],
-            "文字起こし": "◯" if os.path.exists(os.path.join(dirpath, "transcript.md")) else "",
+            "文字起こし": ("YouTube" if os.path.exists(os.path.join(dirpath, "transcript.md")) and "YouTube" in
+                       open(os.path.join(dirpath, "transcript.md"), encoding="utf-8").readline()
+                       else "Gemini" if os.path.exists(os.path.join(dirpath, "transcript.md")) else ""),
             "要約": "◯" if os.path.exists(os.path.join(dirpath, "summary.md")) else "",
             "取得日": m["fetched_at"][:10], "フォルダ": os.path.relpath(dirpath, ROOT),
         })
@@ -197,13 +211,13 @@ if __name__ == "__main__":
     ap = argparse.ArgumentParser()
     ap.add_argument("cmd", choices=["add", "index"])
     ap.add_argument("videos", nargs="*")
-    ap.add_argument("--skip-gemini", action="store_true")
+    ap.add_argument("--summary", action="store_true", help="Geminiの要約も作る（ふだんは不要）")
     ap.add_argument("--import-dir", action="append", default=[])
     a = ap.parse_args()
     if a.cmd == "add":
         for v in a.videos:
             try:
-                add(v, a.skip_gemini, a.import_dir)
+                add(v, a.summary, a.import_dir)
             except Exception as e:  # 1本の失敗で全体を止めない
                 print("失敗", v, e)
     index()
