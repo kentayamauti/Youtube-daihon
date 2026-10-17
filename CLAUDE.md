@@ -10,7 +10,7 @@
 
 ## このリポジトリの中身
 
-- `.company/`：事業部の会社組織（社長→CEO→各部門）。進め方は `.company/CLAUDE.md`。
+- `.company/`：事業部の会社組織（社長→CEO→各部門）。進め方は `.company/CLAUDE.md`。全スキル共通の決まりは `.company/共通ルール.md`、聞きまちがいの解読は `.company/用語集.md`、決まった手順（スキル）の一覧は `.company/スキル一覧.md`。
 - `seminar-20261005/`：10/5セミナーの制作一式（台本・スライド・LP・LINE・配布物）。LPは `main` に入ると https://ykkn-youtube.com に自動反映。LPのファイル（`seminar-20261005/lp/`）は、オーナーにLPの編集を頼まれたときだけ変える。
 
 ## 進め方
