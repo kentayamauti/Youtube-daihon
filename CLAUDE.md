@@ -7,7 +7,8 @@
  ├─ YouTubeコンサル・セミナー事業部 …… このリポジトリ（kentayamauti/Youtube-daihon）
  ├─ YouTubeチャンネル運営事業部 …… 別リポジトリ（youtube-channel-company）
  ├─ 倒産ニュース 事業部 …… 別リポジトリ（kentayamauti/Tousan）
- ├─ 投資チャンネル 事業部 …… 別リポジトリ（kentayamauti/investing）動画＋デイトレ生ライブ＋オーナーの中長期の戦略室
+ ├─ 投資チャンネル 事業部 …… 別リポジトリ（kentayamauti/investing_youtube・非公開）動画＋デイトレ生ライブ
+ ├─ 株の作戦室（オーナー個人の株・チャンネルとは別） …… 別リポジトリ（kentayamauti/investing2・非公開）
  └─ TikTok運営 事業部 …… 別リポジトリ（kentayamauti/Tiktokteam）
 ```
 
