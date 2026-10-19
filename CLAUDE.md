@@ -5,7 +5,10 @@
 ```
 オーナー（山内）
  ├─ YouTubeコンサル・セミナー事業部 …… このリポジトリ（kentayamauti/Youtube-daihon）
- └─ YouTubeチャンネル運営事業部 …… 別リポジトリ（youtube-channel-company）
+ ├─ YouTubeチャンネル運営事業部 …… 別リポジトリ（youtube-channel-company）
+ ├─ 倒産ニュース 事業部 …… 別リポジトリ（kentayamauti/Tousan）
+ ├─ 投資チャンネル 事業部 …… 別リポジトリ（kentayamauti/investing）動画＋デイトレ生ライブ＋オーナーの中長期の戦略室
+ └─ TikTok運営 事業部 …… 別リポジトリ（kentayamauti/Tiktokteam）
 ```
 
 ## このリポジトリの中身
