@@ -24,17 +24,19 @@ if image:
     messages.append({"type": "image", "originalContentUrl": image, "previewImageUrl": image})
 
 r = subprocess.run(
-    ["curl", "-sS", "-m", "30", "-w", "\n%{http_code}", "-X", "POST",
+    ["curl", "-sS", "-m", "30", "-D", "-", "-w", "\n%{http_code}", "-X", "POST",
      "https://api.line.me/v2/bot/message/broadcast",
      "-H", "Content-Type: application/json",
      "-H", "X-Line-Retry-Key: " + str(uuid.uuid4()),
      "--data-binary", json.dumps({"messages": messages}, ensure_ascii=False)],
     capture_output=True, text=True)
-body, _, code = r.stdout.rpartition("\n")
-print(code, body)
+out, _, code = r.stdout.rpartition("\n")
+m = re.search(r"(?im)^x-line-request-id:\s*(\S+)", out)
+request_id = m.group(1) if m else ""
+print(code, out.split("\r\n\r\n")[-1].strip(), "requestId=" + request_id)
 if code != "200":
     sys.exit(1)
 
 now = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=9))).strftime("%Y-%m-%d %H:%M")
-src = re.sub(r"- 状態：.*", "- 状態：配信済み（" + now + " JST）", src, count=1)
+src = re.sub(r"- 状態：.*", "- 状態：配信済み（" + now + " JST）" + ("\n- 配信ID：" + request_id if request_id else ""), src, count=1)
 open(path, "w", encoding="utf-8").write(src)
